@@ -1,7 +1,22 @@
 /*
   Copyright 2018 Antoine Morin-Paulhus
-  Started from a three js code
- */
+  Started from Three.js Collada example code (the one with the elf)
+  
+  This file is part of landscape2018.
+  
+  landscape2018 is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  landscape2018 is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with landscape2018.  If not, see <https://www.gnu.org/licenses/>.
+*/
 
 
 if ( ! Detector.webgl ) Detector.addGetWebGLMessage();

@@ -67,6 +67,7 @@ varying mat4 modelViewM;
 varying mat4 projectionM;
 uniform float time;
 uniform sampler2D land_t;
+uniform sampler2D roads_t;
 varying float water_depth;
 
 float water_h(vec3 p, float intensity){
@@ -149,12 +150,27 @@ vec4 water(float intensity) {
 }
 
 vec4 land(vec3 p, vec2 uv){
+	vec4 col = vec4(0.0);
 	// Todo: phong
 	vec4 tex = texture2D(land_t, uv);
 
 	tex.rgb *= 0.5 + 0.5 * clamp(p.z/0.01, 0.0, 1.0);
+
+	col += tex;
 	
-	return tex;
+	vec4 roads = texture2D(roads_t, uv);
+
+	if(roads.r < 0.9){
+    	col.rgb *= 0.2;
+
+		col.rgb += 0.3;
+
+        if(roads.r > 0.7){
+        	col.rgb += 0.1;
+		}
+	}
+	
+	return col;
 }
 			 
 void main() {

@@ -14,7 +14,7 @@ out_img[:,:,0].fill(255)
 out_diagonals = out_img.copy()
 
 # Road width in pixel
-width = 8
+width = 5
 
 def grow(ii,jj):
     # Let's remember:

@@ -152,23 +152,35 @@ vec4 water(float intensity) {
 vec4 land(vec3 p, vec2 uv){
 	vec4 col = vec4(0.0);
 	// Todo: phong
-	vec4 tex = texture2D(land_t, uv);
+	vec4 land_tex = texture2D(land_t, uv);
 
-	tex.rgb *= 0.5 + 0.5 * clamp(p.z/0.01, 0.0, 1.0);
+	land_tex.rgb *= 0.5 + 0.5 * clamp(p.z/0.01, 0.0, 1.0);
 
-	col += tex;
+	col += land_tex;
 	
 	vec4 roads = texture2D(roads_t, uv);
 
-	if(roads.r < 0.9){
-    	col.rgb *= 0.2;
+	vec4 road_col = vec4(0.3);
 
-		col.rgb += 0.3;
-
-        if(roads.r > 0.7){
-        	col.rgb += 0.1;
-		}
+	// Yellow line
+	if(roads.r < 0.3){
+		road_col.rg += 0.1 *
+			clamp(cos(p.x * 500.0), 0.0, 1.0) *
+			clamp(cos(p.y * 500.0), 0.0, 1.0);
 	}
+	
+	// Smooth out road edge
+	float fac = 1.0;
+	float limit = 0.4;
+	
+	if(roads.r > limit){
+		fac = 1.0 - (roads.r-(1.0-limit))/limit;
+	}
+	
+	fac = clamp(fac, 0.0, 1.0);
+	col = fac * road_col + (1.0 - fac) * land_tex;
+
+	col.a = 1.0;
 	
 	return col;
 }

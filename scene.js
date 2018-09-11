@@ -18,18 +18,45 @@
   along with landscape2018.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+function start(){
+	init();
+	animate();
+}
 
 if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
+var shaders_to_load = [
+	"land_fragment_shader.glsl", "land_vertex_shader.glsl",
+	"building_fragment_shader.glsl", "building_vertex_shader.glsl"
+]
+var loaded_shaders = 0;
+var shaders = {};
+
+for(var i = 0; i < shaders_to_load.length; i++){	
+	var curr = i;
+
+	function load(){
+		shaders[this.shader_name] = this.responseText;
+		loaded_shaders++;
+		if(loaded_shaders == shaders_to_load.length){
+			start();
+		}
+	}
+	
+	var req = new XMLHttpRequest();
+	req.shader_name = shaders_to_load[i];
+	req.addEventListener('load', load);
+	req.open('GET', "./shaders/" + shaders_to_load[i]);
+	req.send();
+}
+
 var container, stats, clock, uniforms;
 var camera, scene, renderer, land;
-init();
-animate();
 
 function init() {
 	container = document.getElementById( 'container' );
 	camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
-	camera.position.set( 5, 5, 5 );
+	camera.position.set( 4, 4, 4 );
 	camera.lookAt( 0, 0.5, 0 );
 	scene = new THREE.Scene();
 	clock = new THREE.Clock();
@@ -69,17 +96,27 @@ function init() {
 		land = collada.scene;
 
 		// Shading
-		
+
+		// Land
 		land.children[2].material = new THREE.ShaderMaterial(
 			{
 				transparent: true,
 				uniforms: uniforms,
-				vertexShader:
-				document.getElementById( 'land_vertex_shader' ).textContent,
-				fragmentShader:
-				document.getElementById( 'land_fragment_shader' ).textContent
+				vertexShader: shaders['land_vertex_shader.glsl'],
+				fragmentShader: shaders['land_fragment_shader.glsl']
 			}
 		);
+
+		// Buildings
+		land.children[4].material = new THREE.ShaderMaterial(
+			{
+				transparent: true,
+				uniforms: uniforms,
+				vertexShader: shaders['building_vertex_shader.glsl'],
+				fragmentShader: shaders['building_fragment_shader.glsl']
+			}
+		);
+		
 
 	} );
 	

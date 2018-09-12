@@ -5,7 +5,7 @@ varying mat4 modelViewM;
 varying mat4 projectionM;
 varying vec3 vNormal;
 uniform float time;
-
+uniform sampler2D roofs_t;
 
 vec4 facade(vec3 p, vec2 uv){
 	vec4 col = vec4(0.0);
@@ -29,14 +29,16 @@ void main() {
 	vec4 col = vec4(0.0);
 	vec2 uv = vUv;
 	vec3 p = vPosition;
-
+	
 	if(vNormal.z > 0.3){
+		vec4 roofs_tex = texture2D(roofs_t, uv);
+		
 		// roof
-		col.rgb += 0.4;
+		col = roofs_tex;
 	} else {
 		col = facade(p, uv);
 	}
-	
+
 	col.a = 1.0;
 
 	gl_FragColor = col;

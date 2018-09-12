@@ -77,12 +77,16 @@ function init() {
 		type: "t",
 		value: textureLoader.load("./models/land/blend/ground.png")
 	};
+	
 	uniforms.roads_t = {
 		type: "t",
 		value: textureLoader.load("./road_generator/out.png")
 	};
-
-
+	
+	uniforms.roofs_t = {
+		type: "t",
+		value: textureLoader.load("./road_generator/roofs.png")
+	};
 	
 	// loading manager
 	var loadingManager = new THREE.LoadingManager( function() {

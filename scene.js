@@ -112,7 +112,7 @@ function init() {
 		);
 
 		// Buildings
-		land.children[4].material = new THREE.ShaderMaterial(
+		land.children[4].material[0] = new THREE.ShaderMaterial(
 			{
 				transparent: true,
 				uniforms: uniforms,

@@ -13,17 +13,19 @@ vec4 facade(vec3 p, vec2 uv){
 	float windows = 0.0;
 
 	windows += cos(p.x * 300.0);
+	windows *= cos(p.y * 200.0);
 
 	windows *= 3.0;
 
 	windows = clamp(windows, 0.0, 1.0);
 	windows += cos(p.z * 300.0);
-	windows = clamp(windows, 0.0, 1.0);
+	windows = clamp(windows, 0.0, 0.7);
 
 	col.rgb += windows * vec3(0.23, 0.2, 0.3);
-	col += 0.2;
-	col += 0.1 * cos(p.x * 2.0);
-	col += 0.1 * cos(p.y * 2.0);
+	col += 0.02;
+	col += 0.02 * cos(p.x * 2.0);
+	col += 0.02 * cos(p.y * 2.0);
+	col += 0.1 * cos(p.z * 2.0);
 
 	return col;
 }

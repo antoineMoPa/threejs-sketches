@@ -140,6 +140,8 @@ function init() {
 	container.appendChild( stats.dom );
 	//
 	window.addEventListener( 'resize', onWindowResize, false );
+
+	scene.background = new THREE.Color(0xffffff);
 }
 
 function onWindowResize() {
@@ -160,7 +162,7 @@ function render() {
 	uniforms.time.value += delta;
 
 	if ( land !== undefined ) {
-		land.rotation.z += delta * 0.3;
+		land.rotation.z += delta * 0.1;
 	}
 	
 	renderer.render( scene, camera );

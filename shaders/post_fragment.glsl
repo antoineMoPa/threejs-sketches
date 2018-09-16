@@ -25,13 +25,32 @@ float getDepth( const in vec2 screenPosition ) {
 void main() {
 	vec4 col = texture2D(tDiffuse, vUv);
 	float depth = getDepth(vUv);
-	float z = depth * ( cameraNear - cameraFar ) - cameraNear;
+	float z = (depth) * ( cameraNear - cameraFar ) - cameraNear;
+
+	z *= -1.0;
 	
 	vec2 offset = vec2(0.0);
 
-	col.rgb *= cos(z * 4.0);
+	vec4 blur_col = vec4(0.0);
+	float blur_size = 0.001;
+
+	for(int i = 0; i < 2; i++){
+		blur_size = blur_size * 2.0;
+		blur_col += 0.25 * texture2D(tDiffuse, vUv + vec2(blur_size, 0.0));
+		blur_col += 0.25 * texture2D(tDiffuse, vUv + vec2(0.0, blur_size));
+		blur_col += 0.25 * texture2D(tDiffuse, vUv + vec2(-blur_size, 0.0));
+		blur_col += 0.25 * texture2D(tDiffuse, vUv + vec2(0.0, -blur_size));
+	}
+
+	float target_z = 1971.0;
 	
-	col.a = texture2D(tDepth, vUv).a;
+	float defocus = clamp(abs(z - target_z)/10.0, 0.0, 1.0);
+
+	col = blur_col * defocus + (1.0 - defocus) * col;
+	
+	if(z > target_z){
+		//col.r += 1.0;
+	}
 	
 	gl_FragColor = col;
 }

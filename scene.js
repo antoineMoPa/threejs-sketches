@@ -27,8 +27,10 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 var shaders_to_load = [
 	"land_fragment_shader.glsl", "land_vertex_shader.glsl",
-	"building_fragment_shader.glsl", "building_vertex_shader.glsl"
-]
+	"building_fragment_shader.glsl", "building_vertex_shader.glsl",
+	"post_fragment.glsl", "post_vertex.glsl"
+];
+
 var loaded_shaders = 0;
 var shaders = {};
 
@@ -51,7 +53,8 @@ for(var i = 0; i < shaders_to_load.length; i++){
 }
 
 var container, stats, clock, uniforms;
-var camera, scene, renderer, land;
+var camera, scene, renderer, composer, ppshader, land;
+var renderPass, depthPass, shaderPass;
 
 function init() {
 	container = document.getElementById( 'container' );
@@ -72,7 +75,10 @@ function init() {
 		]
 	);
 
-	uniforms.time = {value: 0.0};
+	uniforms.time = {
+		value: 0.0
+	};
+	
 	uniforms.land_t = {
 		type: "t",
 		value: textureLoader.load("./models/land/blend/ground.png")
@@ -87,7 +93,7 @@ function init() {
 		type: "t",
 		value: textureLoader.load("./road_generator/roofs.png")
 	};
-	
+
 	// loading manager
 	var loadingManager = new THREE.LoadingManager( function() {
 		scene.add( land );
@@ -130,8 +136,27 @@ function init() {
 	var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.1 );
 	directionalLight.position.set( 10, 10, 1 );
 	scene.add( directionalLight );
+
+	// Post-Process uniforms
+	var ppuniforms = {};
+
+	ppuniforms['time'] = { type: "f", value: 0.0 };
+	ppuniforms['cameraNear'] = { type: "f", value: camera.near };
+	ppuniforms['cameraFar'] = { type: "f", value: camera.far };
+	ppuniforms['tDiffuse'] = { type: "t", value: null };
+	ppuniforms['tDepth'] = { type: "t", value: null };
+	
+	ppshader = {
+		uniforms: ppuniforms,
+		defines: {
+			'DEPTH_PACKING': 1
+		},
+		vertexShader: shaders['post_vertex.glsl'],
+		fragmentShader: shaders['post_fragment.glsl']
+	};
 	
 	renderer = new THREE.WebGLRenderer();
+	
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	container.appendChild( renderer.domElement );
@@ -142,6 +167,19 @@ function init() {
 	window.addEventListener( 'resize', onWindowResize, false );
 
 	scene.background = new THREE.Color(0xffffff);
+
+	composer = new THREE.EffectComposer(renderer);
+	renderPass = new THREE.RenderPass(scene, camera);
+	depthPass = new THREE.DepthPass(scene, camera);
+	shaderPass = new THREE.ShaderPass(ppshader);
+
+	shaderPass.uniforms['tDepth'].value = depthPass.renderTarget.texture;
+
+	composer.addPass(renderPass);
+	composer.addPass(depthPass);
+	composer.addPass(shaderPass);
+
+	shaderPass.renderToScreen = true;
 }
 
 function onWindowResize() {
@@ -159,11 +197,12 @@ function animate() {
 function render() {
 	var delta = clock.getDelta();
 
-	uniforms.time.value += delta;
-
-	if ( land !== undefined ) {
+	// TODO: add back time to land shader
+	shaderPass.uniforms.time.value = clock.elapsedTime;
+	
+	if (land !== undefined) {
 		land.rotation.z += delta * 0.1;
 	}
-	
-	renderer.render( scene, camera );
+
+	composer.render();
 }

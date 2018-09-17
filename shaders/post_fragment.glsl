@@ -3,6 +3,7 @@ uniform sampler2D tDiffuse, tDepth;
 uniform float cameraNear;
 uniform float cameraFar;
 varying vec2 vUv;
+varying vec3 vPosition;
 
 // Depth unpacking code from ThreeJS examples
 
@@ -23,12 +24,11 @@ float getDepth( const in vec2 screenPosition ) {
 }
 
 void main() {
-	vec4 col = texture2D(tDiffuse, vUv);
+	vec4 col = vec4(0.0);
+	vec4 diffuse = texture2D(tDiffuse, vUv);
 	float depth = getDepth(vUv);
-	float z = (depth) * ( cameraNear - cameraFar ) - cameraNear;
+	float z = cameraFar + ((depth) * ( cameraNear - cameraFar ) - cameraNear);
 
-	z *= -1.0;
-	
 	vec2 offset = vec2(0.0);
 
 	vec4 blur_col = vec4(0.0);
@@ -42,15 +42,34 @@ void main() {
 		blur_col += 0.25 * texture2D(tDiffuse, vUv + vec2(0.0, -blur_size));
 	}
 
-	float target_z = 1971.0;
+	float target_z = 30.0;
 	
-	float defocus = clamp(abs(z - target_z)/10.0, 0.0, 1.0);
+	float defocus = clamp(abs(z - target_z)/3.0, 0.0, 1.0);
+	
+	col = blur_col * defocus + (1.0 - defocus) * diffuse;
 
-	col = blur_col * defocus + (1.0 - defocus) * col;
-	
-	if(z > target_z){
-		//col.r += 1.0;
+	if(diffuse.a < 0.1){
+		vec2 p = vUv;
+		vec3 skypos = vPosition;
+		
+		// Sky
+		//col.r += 0.2;
+		//col.g += 0.4 + 0.4 * skypos.x;
+		//col.b += 0.7 + 0.4 * skypos.y;
+
+		if(skypos.y < 0.0){
+			col.b += 0.8;
+		}
+		
+		col.r = cos(skypos.x);
+
+		col.r = cameraPosition.x;
+		col.g = cameraPosition.z;
+		
+		col.b += abs(skypos.y);
 	}
+	
+	col.a = 1.0;
 	
 	gl_FragColor = col;
 }

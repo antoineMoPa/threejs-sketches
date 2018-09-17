@@ -53,7 +53,8 @@ for(var i = 0; i < shaders_to_load.length; i++){
 }
 
 var container, stats, clock, uniforms;
-var camera, scene, renderer, composer, ppshader, land;
+var camera, scene, renderer, composer, ppshader;
+var land;
 var renderPass, depthPass, shaderPass;
 
 function init() {
@@ -126,8 +127,6 @@ function init() {
 				fragmentShader: shaders['building_fragment_shader.glsl']
 			}
 		);
-		
-
 	} );
 	
 	//
@@ -155,7 +154,7 @@ function init() {
 		fragmentShader: shaders['post_fragment.glsl']
 	};
 	
-	renderer = new THREE.WebGLRenderer();
+	renderer = new THREE.WebGLRenderer({alpha: true});
 	
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( window.innerWidth, window.innerHeight );
@@ -165,8 +164,6 @@ function init() {
 	container.appendChild( stats.dom );
 	//
 	window.addEventListener( 'resize', onWindowResize, false );
-
-	scene.background = new THREE.Color(0xffffff);
 
 	composer = new THREE.EffectComposer(renderer);
 	renderPass = new THREE.RenderPass(scene, camera);
@@ -198,11 +195,11 @@ function render() {
 	var delta = clock.getDelta();
 
 	// TODO: add back time to land shader
-	shaderPass.uniforms.time.value = clock.elapsedTime;
-	
-	if (land !== undefined) {
-		land.rotation.z += delta * 0.1;
-	}
+	var t = shaderPass.uniforms.time.value = clock.elapsedTime;
 
+	camera.position.x = 7.0 * Math.cos(t * 0.3);
+	camera.position.z = 7.0 * Math.sin(t * 0.3);
+	camera.lookAt( 0, 0.5, 0 );
+	
 	composer.render();
 }

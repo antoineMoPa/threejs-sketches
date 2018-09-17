@@ -27,6 +27,8 @@ vec4 facade(vec3 p, vec2 uv){
 	col += 0.02 * cos(p.y * 2.0);
 	col += 0.1 * cos(p.z * 2.0);
 
+	col.a = 1.0;
+	
 	return col;
 }
 			 

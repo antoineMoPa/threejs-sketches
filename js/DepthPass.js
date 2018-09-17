@@ -62,7 +62,7 @@ THREE.DepthPass.prototype = Object.assign( Object.create( THREE.Pass.prototype )
 		renderer.setClearColor( 0xffffff );
 		renderer.setClearAlpha( 1.0 );
 
-		renderer.render( this.scene, this.camera, this.renderTarget, this.clear );
+		renderer.render( this.scene, this.camera, this.renderTarget, true);
 
 		this.scene.overrideMaterial = null;
 		renderer.setClearColor( this.oldClearColor );

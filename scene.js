@@ -28,7 +28,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 var shaders_to_load = [
 	"land_fragment_shader.glsl", "land_vertex_shader.glsl",
 	"building_fragment_shader.glsl", "building_vertex_shader.glsl",
-	"post_fragment.glsl", "post_vertex.glsl"
+	"post_fragment.glsl", "post_vertex.glsl",
+	"sky_fragment.glsl", "sky_vertex.glsl"
 ];
 
 var loaded_shaders = 0;
@@ -54,18 +55,32 @@ for(var i = 0; i < shaders_to_load.length; i++){
 
 var container, stats, clock, uniforms;
 var camera, scene, renderer, composer, ppshader;
-var land;
+var land, sky;
 var renderPass, depthPass, shaderPass;
 
 function init() {
 	container = document.getElementById( 'container' );
 	camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
-	camera.position.set( 4, 4, 4 );
+	camera.position.set( 1.8, 0.5, 2.0 );
 	camera.lookAt( 0, 0.5, 0 );
 	scene = new THREE.Scene();
 	clock = new THREE.Clock();
-
+	
 	var textureLoader = new THREE.TextureLoader();
+
+	
+	var skyMaterial = new THREE.ShaderMaterial(
+		{
+			uniforms: uniforms,
+			vertexShader: shaders['sky_vertex.glsl'],
+			fragmentShader: shaders['sky_fragment.glsl'],
+			side: THREE.BackSide
+		}
+	);
+
+	var skyBox = new THREE.BoxBufferGeometry(100, 100, 100);
+	sky = new THREE.Mesh(skyBox, skyMaterial);
+	scene.add(sky);
 	
 	uniforms = {};
 	
@@ -196,9 +211,11 @@ function render() {
 
 	// TODO: add back time to land shader
 	var t = shaderPass.uniforms.time.value = clock.elapsedTime;
+	uniforms.time.value = clock.elapsedTime;
 
-	camera.position.x = 7.0 * Math.cos(t * 0.3);
-	camera.position.z = 7.0 * Math.sin(t * 0.3);
+	camera.position.x = 3.0 * Math.cos(t * 0.3);
+	camera.position.z = 3.0 * Math.sin(t * 0.3);
+	camera.position.y = 0.3 * Math.sin(t * 0.3) + 0.8;
 	camera.lookAt( 0, 0.5, 0 );
 	
 	composer.render();

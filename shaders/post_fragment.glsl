@@ -36,38 +36,21 @@ void main() {
 
 	for(int i = 0; i < 2; i++){
 		blur_size = blur_size * 2.0;
-		blur_col += 0.25 * texture2D(tDiffuse, vUv + vec2(blur_size, 0.0));
-		blur_col += 0.25 * texture2D(tDiffuse, vUv + vec2(0.0, blur_size));
-		blur_col += 0.25 * texture2D(tDiffuse, vUv + vec2(-blur_size, 0.0));
-		blur_col += 0.25 * texture2D(tDiffuse, vUv + vec2(0.0, -blur_size));
+		blur_col += 0.1 * texture2D(tDiffuse, vUv + vec2(blur_size, 0.0));
+		blur_col += 0.1 * texture2D(tDiffuse, vUv + vec2(0.0, blur_size));
+		blur_col += 0.1 * texture2D(tDiffuse, vUv + vec2(-blur_size, 0.0));
+		blur_col += 0.1 * texture2D(tDiffuse, vUv + vec2(0.0, -blur_size));
 	}
 
-	float target_z = 30.0;
+	float target_z = 70.0;
 	
-	float defocus = clamp(abs(z - target_z)/3.0, 0.0, 1.0);
+	float defocus = clamp(abs(z - target_z)/30.0, 0.0, 1.0);
 	
 	col = blur_col * defocus + (1.0 - defocus) * diffuse;
 
-	if(diffuse.a < 0.1){
-		vec2 p = vUv;
-		vec3 skypos = vPosition;
-		
-		// Sky
-		//col.r += 0.2;
-		//col.g += 0.4 + 0.4 * skypos.x;
-		//col.b += 0.7 + 0.4 * skypos.y;
-
-		if(skypos.y < 0.0){
-			col.b += 0.8;
-		}
-		
-		col.r = cos(skypos.x);
-
-		col.r = cameraPosition.x;
-		col.g = cameraPosition.z;
-		
-		col.b += abs(skypos.y);
-	}
+	//if(z < target_z){
+	//	col.r += 1.0;
+	//}
 	
 	col.a = 1.0;
 	

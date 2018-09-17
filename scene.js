@@ -124,7 +124,7 @@ function init() {
 		// Shading
 
 		// Land
-		land.children[2].material = new THREE.ShaderMaterial(
+		land.children[2].material[0] = new THREE.ShaderMaterial(
 			{
 				transparent: true,
 				uniforms: uniforms,

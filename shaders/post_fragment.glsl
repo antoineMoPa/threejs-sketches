@@ -32,7 +32,7 @@ void main() {
 	vec2 offset = vec2(0.0);
 
 	vec4 blur_col = vec4(0.0);
-	float blur_size = 0.001;
+	float blur_size = 0.0003;
 
 	for(int i = 0; i < 2; i++){
 		blur_size = blur_size * 2.0;

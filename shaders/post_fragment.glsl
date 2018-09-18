@@ -25,6 +25,7 @@ float getDepth( const in vec2 screenPosition ) {
 
 void main() {
 	vec4 col = vec4(0.0);
+	vec2 p = vUv - 0.5;
 	vec4 diffuse = texture2D(tDiffuse, vUv);
 	float depth = getDepth(vUv);
 	float z = cameraFar + ((depth) * ( cameraNear - cameraFar ) - cameraNear);
@@ -32,10 +33,10 @@ void main() {
 	vec2 offset = vec2(0.0);
 
 	vec4 blur_col = vec4(0.0);
-	float blur_size = 0.0003;
+	float blur_size = 0.002;
 
 	for(int i = 0; i < 2; i++){
-		blur_size = blur_size * 2.0;
+		blur_size = blur_size * 1.5;
 		blur_col += 0.1 * texture2D(tDiffuse, vUv + vec2(blur_size, 0.0));
 		blur_col += 0.1 * texture2D(tDiffuse, vUv + vec2(0.0, blur_size));
 		blur_col += 0.1 * texture2D(tDiffuse, vUv + vec2(-blur_size, 0.0));
@@ -48,9 +49,19 @@ void main() {
 	
 	col = blur_col * defocus + (1.0 - defocus) * diffuse;
 
-	//if(z < target_z){
-	//	col.r += 1.0;
-	//}
+	// Fog
+	col.rgb +=  clamp(1.0 - pow(0.003 * z, 2.0), 0.0, 0.5);
+	
+	// Vignette
+	
+	float d = length(p);
+	col *= 1.0 - d;
+
+	// Color correction
+
+	col.r = 1.1 * pow(col.r, 1.0 + 0.2 * cos(time + p.x * 2.0 + 1.0));
+	col.g = 0.8 * pow(col.g, 0.8 + 0.2 * cos(time + p.x * 2.0));
+	col.b = 1.0 * pow(col.b, 1.2);
 	
 	col.a = 1.0;
 	

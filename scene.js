@@ -98,8 +98,8 @@ function init() {
 	uniforms.land_t = {
 		type: "t",
 		value: textureLoader.load("./models/land/blend/ground.png")
-	};
-	
+	};	
+
 	uniforms.roads_t = {
 		type: "t",
 		value: textureLoader.load("./road_generator/out.png")
@@ -109,6 +109,11 @@ function init() {
 		type: "t",
 		value: textureLoader.load("./road_generator/roofs.png")
 	};
+
+	uniforms.is_far = {
+		value: 0.0
+	};
+		
 
 	// loading manager
 	var loadingManager = new THREE.LoadingManager( function() {
@@ -133,10 +138,31 @@ function init() {
 			}
 		);
 
+		var far_uniforms = THREE.UniformsUtils.clone(uniforms);
+
+		far_uniforms.is_far = {value: 1.0};
+
+		far_uniforms.land_far_t = {
+			type: "t",
+			value: textureLoader.load("./models/land/blend/ground_far.png")
+		};
+
+		
+		// Land-far
+		land.children[2].material[1] = new THREE.ShaderMaterial(
+			{
+				transparent: false,
+				uniforms: far_uniforms,
+				vertexShader: shaders['land_vertex_shader.glsl'],
+				fragmentShader: shaders['land_fragment_shader.glsl']
+			}
+		);
+
+		
 		// Buildings
 		land.children[4].material[0] = new THREE.ShaderMaterial(
 			{
-				transparent: true,
+				transparent: false,
 				uniforms: uniforms,
 				vertexShader: shaders['building_vertex_shader.glsl'],
 				fragmentShader: shaders['building_fragment_shader.glsl']

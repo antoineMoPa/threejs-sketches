@@ -5,8 +5,12 @@ varying mat4 modelViewM;
 varying mat4 projectionM;
 uniform float time;
 uniform sampler2D land_t;
+uniform sampler2D land_far_t;
 uniform sampler2D roads_t;
 varying float water_depth;
+
+// Temporary
+uniform float is_far;
 
 float water_h(vec3 p, float intensity){
 	float h = 0.0;
@@ -129,33 +133,38 @@ void main() {
 	vec4 col = vec4(0.0);
 	vec2 uv = vUv;
 	vec3 p = vPosition;
-	
-	float water_fac = water_depth/0.01;
-	water_fac = clamp(water_fac, 0.0, 1.0);
 
-	vec4 water_col = water(water_fac);
-
-	if(water_depth < 0.01){
-		water_col +=
-			(1.0 - water_depth/0.01) *
-			(
-				vec4(0.1) +
-				vec4(0.7) *
-				abs(
-					cos(
-						water_depth / 0.01 * 24.0 +
-						0.5 * cos(p.x * 200.0) +
-						time * 10.0
+	if(is_far < 0.5){
+		
+		float water_fac = water_depth/0.01;
+		water_fac = clamp(water_fac, 0.0, 1.0);
+		
+		vec4 water_col = water(water_fac);
+		
+		if(water_depth < 0.01){
+			water_col +=
+				(1.0 - water_depth/0.01) *
+				(
+					vec4(0.1) +
+					vec4(0.7) *
+					abs(
+						cos(
+							water_depth / 0.01 * 24.0 +
+							0.5 * cos(p.x * 200.0) +
+							time * 10.0
+							)
 						)
-					)
-				);
+					);
+		}
+		
+		vec4 land_col = land(p, uv);
+		col += water_fac * water_col + (1.0 - water_fac) * land_col;
+		
+	} else {
+		col = texture2D(land_far_t, uv);
 	}
 	
-	vec4 land_col = land(p, uv);
-	
-	col += water_fac * water_col + (1.0 - water_fac) * land_col;
-
 	col.a = 1.0;
-
+	
 	gl_FragColor = col;
 }

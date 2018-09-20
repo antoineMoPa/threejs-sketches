@@ -29,7 +29,8 @@ var shaders_to_load = [
 	"land_fragment_shader.glsl", "land_vertex_shader.glsl",
 	"building_fragment_shader.glsl", "building_vertex_shader.glsl",
 	"post_fragment.glsl", "post_vertex.glsl",
-	"sky_fragment.glsl", "sky_vertex.glsl"
+	"sky_fragment.glsl", "sky_vertex.glsl",
+	"trees_fragment.glsl", "trees_vertex.glsl"
 ];
 
 var loaded_shaders = 0;
@@ -49,6 +50,7 @@ for(var i = 0; i < shaders_to_load.length; i++){
 	var req = new XMLHttpRequest();
 	req.shader_name = shaders_to_load[i];
 	req.addEventListener('load', load);
+	//req.overrideMimeType("text/x-shader");
 	req.open('GET', "./shaders/" + shaders_to_load[i]);
 	req.send();
 }
@@ -57,10 +59,16 @@ var container, stats, clock, uniforms;
 var camera, scene, renderer, composer, ppshader;
 var land, sky;
 var renderPass, depthPass, shaderPass;
+var collada;
+//var player_width = 800;
+//var player_height = 500;
+var player_width = window.innerWidth;
+var player_height = window.innerHeight;
+
 
 function init() {
 	container = document.getElementById( 'container' );
-	camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 2000 );
+	camera = new THREE.PerspectiveCamera( 45, player_width / player_height, 0.1, 2000 );
 	camera.position.set( 1.8, 0.5, 2.0 );
 	camera.lookAt( 0, 0.5, 0 );
 	scene = new THREE.Scene();
@@ -123,13 +131,15 @@ function init() {
 	// collada
 	var loader = new THREE.ColladaLoader( loadingManager );
 
-	loader.load( './models/land/blend/land.dae', function ( collada ) {
-		land = collada.scene;
+	loader.load( './models/land/blend/land.dae', function ( _collada ) {
+		collada = _collada;
+		land = _collada.scene;
 
 		// Shading
 
 		// Land
-		land.children[2].material[0] = new THREE.ShaderMaterial(
+		
+		land.children[0].material[0] = new THREE.ShaderMaterial(
 			{
 				transparent: true,
 				uniforms: uniforms,
@@ -149,7 +159,7 @@ function init() {
 
 		
 		// Land-far
-		land.children[2].material[1] = new THREE.ShaderMaterial(
+		land.children[0].material[1] = new THREE.ShaderMaterial(
 			{
 				transparent: false,
 				uniforms: far_uniforms,
@@ -160,7 +170,7 @@ function init() {
 
 		
 		// Buildings
-		land.children[4].material[0] = new THREE.ShaderMaterial(
+		land.children[1].material[0] = new THREE.ShaderMaterial(
 			{
 				transparent: false,
 				uniforms: uniforms,
@@ -168,6 +178,24 @@ function init() {
 				fragmentShader: shaders['building_fragment_shader.glsl']
 			}
 		);
+		
+		// Trees
+		var trees_matrial = new THREE.ShaderMaterial(
+			{
+				transparent: true,
+				uniforms: uniforms,
+				vertexShader: shaders['trees_vertex.glsl'],
+				fragmentShader: shaders['trees_fragment.glsl']
+			}
+		);
+
+		var geometry = new THREE.BufferGeometry();
+		var vertices = new Float32Array(collada.library.geometries["trees-mesh"].sources["trees-mesh-positions"].array);
+		geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+		
+		var trees = new THREE.PointCloud(geometry, trees_matrial);
+
+		scene.add(trees);
 	} );
 	
 	//
@@ -198,7 +226,7 @@ function init() {
 	renderer = new THREE.WebGLRenderer({alpha: true});
 	
 	renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.setSize( player_width, player_height );
 	container.appendChild( renderer.domElement );
 	//
 	stats = new Stats();
@@ -221,9 +249,9 @@ function init() {
 }
 
 function onWindowResize() {
-	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.aspect = player_width / player_height;
 	camera.updateProjectionMatrix();
-	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.setSize( player_width, player_height );
 }
 
 function animate() {

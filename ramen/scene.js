@@ -26,6 +26,7 @@ function start(){
 if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 var shaders_to_load = [
+	"noodles_fragment.glsl", "noodles_vertex.glsl",
 	"sky_fragment.glsl", "sky_vertex.glsl",
 	"post_fragment.glsl", "post_vertex.glsl"
 ];
@@ -113,8 +114,21 @@ function init() {
 		collada = _collada;
 		ramen = _collada.scene;
 
-		// Shading
+		// Special shading
+		var noodles = ramen.getChildByName("noodles");
+		
+		noodles.material = new THREE.ShaderMaterial(
+			{
+				transparent: true,
+				uniforms: uniforms,
+				vertexShader: shaders['noodles_vertex.glsl'],
+				fragmentShader: shaders['noodles_fragment.glsl'],
+				depthWrite: false,
+				//xdepthTest: false
+			}
+		);
 
+		noodles.renderOrder = -1;
 	});
 	
 	//
@@ -187,7 +201,7 @@ function render() {
 
 	camera.position.x = 3.0 * Math.cos(t * 0.3);
 	camera.position.z = 3.0 * Math.sin(t * 0.3);
-	camera.position.y = 0.3 * Math.sin(t * 0.3) + 1.8;
+	camera.position.y = 0.3 * Math.sin(t * 0.3) + 2.8;
 	camera.lookAt( 0, 0.5, 0 );
 	
 	composer.render();

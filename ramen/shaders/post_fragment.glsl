@@ -33,35 +33,27 @@ void main() {
 	vec2 offset = vec2(0.0);
 
 	vec4 blur_col = vec4(0.0);
-	float blur_size = 0.002;
+	float blur_size = 0.001;
 
 	for(int i = 0; i < 1; i++){
 		blur_size = blur_size * 1.5;
-		blur_col += 0.1 * texture2D(tDiffuse, vUv + vec2(blur_size, 0.0));
-		blur_col += 0.1 * texture2D(tDiffuse, vUv + vec2(0.0, blur_size));
-		blur_col += 0.1 * texture2D(tDiffuse, vUv + vec2(-blur_size, 0.0));
-		blur_col += 0.1 * texture2D(tDiffuse, vUv + vec2(0.0, -blur_size));
+		blur_col += 0.25 * texture2D(tDiffuse, vUv + vec2(blur_size, 0.0));
+		blur_col += 0.25 * texture2D(tDiffuse, vUv + vec2(0.0, blur_size));
+		blur_col += 0.25 * texture2D(tDiffuse, vUv + vec2(-blur_size, 0.0));
+		blur_col += 0.25 * texture2D(tDiffuse, vUv + vec2(0.0, -blur_size));
 	}
 
-	float target_z = 70.0;
-	
-	float defocus = clamp(abs(z - target_z)/30.0, 0.0, 1.0);
-	
-	col = blur_col * defocus + (1.0 - defocus) * diffuse;
+	col = blur_col + diffuse;
+	col /= 2.0;
 
-	// Fog
-	col.rgb +=  clamp(1.0 - pow(0.003 * z, 2.0), 0.0, 0.5);
-	
-	// Vignette
-	
 	float d = length(p);
-	col *= 1.0 - d;
+	col *= 1.3 - pow(d, 3.0);
 
 	// Color correction
 
-	col.r = 1.1 * pow(col.r, 1.0 + 0.2 * cos(time + p.x * 2.0 + 1.0));
-	col.g = 0.8 * pow(col.g, 0.8 + 0.2 * cos(time + p.x * 2.0));
-	col.b = 1.0 * pow(col.b, 1.2);
+	col.r = 1.3 * pow(col.r, 0.86);
+	col.g = 1.4 * pow(col.g, 0.83);
+	col.b = 1.3 * pow(col.b, 0.7);
 	
 	col.a = 1.0;
 	

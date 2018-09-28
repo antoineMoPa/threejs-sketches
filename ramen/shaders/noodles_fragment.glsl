@@ -15,11 +15,15 @@ void main() {
 
 	float noodle_fac = cos(uv.x * 2.0 * PI2 + 0.5 * cos(uv.y * 8.0 * PI2) + 3.1416/2.0);
 	noodle_fac = abs(noodle_fac);
-	noodle_fac = clamp(noodle_fac, 0.0, 1.0);
+	noodle_fac = clamp(pow(noodle_fac, 2.0), 0.0, 1.0);
 	
 	col.rgb = vec3(0.8, 0.8, 0.6) - (1.0 - noodle_fac);
 
 	col *= 1.0 - 0.1 * distance(p.z, 0.8)/0.2;
+
+	// Tweak color
+	col *= 1.0 + 0.3 * cos(time * 1.0 + p.x * 20.0);
+	col *= 1.0 + 0.3 * cos(time * 1.0 + p.y * 30.0);
 	
 	col.a = noodle_fac;
 	

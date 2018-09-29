@@ -129,14 +129,28 @@ function init() {
 		);
 
 		noodles.renderOrder = -1;
+
+
+		var table = ramen.getChildByName("table");
+		var bowl = ramen.getChildByName("bowl");
+		bowl.castShadow = true;
+		table.receiveShadow = true;
+
+		var lamp = ramen.getChildByName("Lamp");
+		lamp.castShadow = true;
+
+		lamp.shadow.mapSize.width = 1024;
+		lamp.shadow.mapSize.height = 1024;
+		lamp.shadow.camera.near = 1.0;
+		lamp.shadow.camera.far = 20;
+		lamp.shadow.radius = 2;
+		lamp.shadowDarkness = 10;
+
 	});
 	
 	//
-	var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.3 );
-	//scene.add( ambientLight );
-	var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.1 );
-	directionalLight.position.set( 10, 10, 1 );
-	scene.add( directionalLight );
+	var ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+	scene.add(ambientLight);
 
 	// Post-Process uniforms
 	var ppuniforms = {};
@@ -157,6 +171,7 @@ function init() {
 	};
 	
 	renderer = new THREE.WebGLRenderer({alpha: true});
+	renderer.shadowMap.enabled = true;
 	
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( player_width, player_height );

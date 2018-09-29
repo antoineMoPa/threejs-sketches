@@ -132,7 +132,11 @@ function init() {
 
 
 		var table = ramen.getChildByName("table");
+		var stick_1 = ramen.getChildByName("stick_1");
+		var stick_2 = ramen.getChildByName("stick_2");
 		var bowl = ramen.getChildByName("bowl");
+		stick_1.castShadow = true;
+		stick_2.castShadow = true;
 		bowl.castShadow = true;
 		table.receiveShadow = true;
 

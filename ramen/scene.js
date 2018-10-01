@@ -23,7 +23,7 @@ function start(){
 	animate();
 }
 
-if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+if (! Detector.webgl) Detector.addGetWebGLMessage();
 
 var shaders_to_load = [
 	"noodles_fragment.glsl", "noodles_vertex.glsl",
@@ -64,11 +64,12 @@ var player_width = window.innerWidth;
 var player_height = window.innerHeight;
 
 
-function init() {
-	container = document.getElementById( 'container' );
-	camera = new THREE.PerspectiveCamera( 45, player_width / player_height, 0.1, 2000 );
-	camera.position.set( 1.8, 0.5, 2.0 );
-	camera.lookAt( 0, 0.5, 0 );
+function init(){
+	container = document.getElementById('container');
+	camera = new THREE.PerspectiveCamera(45, player_width / player_height, 0.1, 2000);
+	<
+	camera.position.set(1.8, 0.5, 2.0);
+	camera.lookAt(0, 0.5, 0);
 	scene = new THREE.Scene();
 	clock = new THREE.Clock();
 	
@@ -103,14 +104,14 @@ function init() {
 			
 
 	// loading manager
-	var loadingManager = new THREE.LoadingManager(function() {
+	var loadingManager = new THREE.LoadingManager(function(){
 		scene.add(ramen);
 	});
 	
 	// collada
 	var loader = new THREE.ColladaLoader(loadingManager);
 
-	loader.load( './models/ramen/ramen.dae', function ( _collada ) {
+	loader.load('./models/ramen/ramen.dae', function (_collada){
 		collada = _collada;
 		ramen = _collada.scene;
 
@@ -177,14 +178,14 @@ function init() {
 	renderer = new THREE.WebGLRenderer({alpha: true});
 	renderer.shadowMap.enabled = true;
 	
-	renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.setSize( player_width, player_height );
-	container.appendChild( renderer.domElement );
+	renderer.setPixelRatio(window.devicePixelRatio);
+	renderer.setSize(player_width, player_height);
+	container.appendChild(renderer.domElement);
 	//
 	stats = new Stats();
-	container.appendChild( stats.dom );
+	container.appendChild(stats.dom);
 	//
-	window.addEventListener( 'resize', onWindowResize, false );
+	window.addEventListener('resize', onWindowResize, false);
 
 	composer = new THREE.EffectComposer(renderer);
 	renderPass = new THREE.RenderPass(scene, camera);
@@ -200,19 +201,19 @@ function init() {
 	shaderPass.renderToScreen = true;
 }
 
-function onWindowResize() {
+function onWindowResize(){
 	camera.aspect = player_width / player_height;
 	camera.updateProjectionMatrix();
-	renderer.setSize( player_width, player_height );
+	renderer.setSize(player_width, player_height);
 }
 
-function animate() {
-	requestAnimationFrame( animate );
+function animate(){
+	requestAnimationFrame(animate);
 	render();
 	stats.update();
 }
 
-function render() {
+function render(){
 	var delta = clock.getDelta();
 
 	var t = shaderPass.uniforms.time.value = clock.elapsedTime;
@@ -221,7 +222,7 @@ function render() {
 	camera.position.x = 3.0 * Math.cos(t * 0.3);
 	camera.position.z = 3.0 * Math.sin(t * 0.3);
 	camera.position.y = 0.3 * Math.sin(t * 0.3) + 2.8;
-	camera.lookAt( 0, 0.5, 0 );
+	camera.lookAt(0, 0.5, 0);
 	
 	composer.render();
 }

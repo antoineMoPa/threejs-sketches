@@ -67,7 +67,6 @@ var player_height = window.innerHeight;
 function init(){
 	container = document.getElementById('container');
 	camera = new THREE.PerspectiveCamera(45, player_width / player_height, 0.1, 2000);
-	<
 	camera.position.set(1.8, 0.5, 2.0);
 	camera.lookAt(0, 0.5, 0);
 	scene = new THREE.Scene();

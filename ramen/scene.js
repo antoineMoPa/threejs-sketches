@@ -27,8 +27,9 @@ if (! Detector.webgl) Detector.addGetWebGLMessage();
 
 var shaders_to_load = [
 	"noodles_fragment.glsl", "noodles_vertex.glsl",
+	"soup_fragment.glsl", "soup_vertex.glsl",
 	"sky_fragment.glsl", "sky_vertex.glsl",
-	"post_fragment.glsl", "post_vertex.glsl"
+	"post_fragment.glsl", "post_vertex.glsl",
 ];
 
 var loaded_shaders = 0;
@@ -54,40 +55,43 @@ for(var i = 0; i < shaders_to_load.length; i++){
 }
 
 var container, stats, clock, uniforms;
-var camera, scene, renderer, composer, ppshader;
+var camera, reflectionCamera, scene, renderer, composer, ppshader;
 var ramen, sky;
-var renderPass, depthPass, shaderPass;
+var renderPass, depthPass, shaderPass, reflectionTarget;
 var collada;
-//var player_width = 800;
-//var player_height = 500;
-var player_width = window.innerWidth;
-var player_height = window.innerHeight;
+var noodles, soup;
+var player_width = 800;
+var player_height = 500;
+var mirror_normal = new THREE.Vector3(0, 1, 0);
+//var player_width = window.innerWidth;
+//var player_height = window.innerHeight;
 
 
 function init(){
 	container = document.getElementById('container');
-	camera = new THREE.PerspectiveCamera(45, player_width / player_height, 0.1, 2000);
-	camera.position.set(1.8, 0.5, 2.0);
-	camera.lookAt(0, 0.5, 0);
+
 	scene = new THREE.Scene();
 	clock = new THREE.Clock();
 	
+	camera = new THREE.PerspectiveCamera(45, player_width / player_height, 0.1, 2000);
+	camera.position.set(1.8, 0.5, 2.0);
+	camera.lookAt(0, 0.5, 0);
+	
+	reflectionCamera = new THREE.PerspectiveCamera();
+	
+	reflectionTarget = new THREE.WebGLRenderTarget(
+		256,
+		256		
+	);
+	
+	reflectionTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
+	reflectionCamera.position.set(0.0, 0.82, 0.0);
+	reflectionCamera.lookAt(0, -1.0, 0.0);
+	
+	scene.add(reflectionCamera);
+	
 	var textureLoader = new THREE.TextureLoader();
 
-	
-	var skyMaterial = new THREE.ShaderMaterial(
-		{
-			uniforms: uniforms,
-			vertexShader: shaders['sky_vertex.glsl'],
-			fragmentShader: shaders['sky_fragment.glsl'],
-			side: THREE.BackSide
-		}
-	);
-
-	var skyBox = new THREE.BoxBufferGeometry(100, 100, 100);
-	sky = new THREE.Mesh(skyBox, skyMaterial);
-	scene.add(sky);
-	
 	uniforms = {};
 	
 	uniforms = THREE.UniformsUtils.merge(
@@ -101,7 +105,19 @@ function init(){
 		value: 0.0
 	};
 			
+	var skyMaterial = new THREE.ShaderMaterial(
+		{
+			uniforms: uniforms,
+			vertexShader: shaders['sky_vertex.glsl'],
+			fragmentShader: shaders['sky_fragment.glsl'],
+			side: THREE.BackSide
+		}
+	);
 
+	var skyBox = new THREE.BoxBufferGeometry(100, 100, 100);
+	sky = new THREE.Mesh(skyBox, skyMaterial);
+	scene.add(sky);
+	
 	// loading manager
 	var loadingManager = new THREE.LoadingManager(function(){
 		scene.add(ramen);
@@ -115,7 +131,7 @@ function init(){
 		ramen = _collada.scene;
 
 		// Special shading
-		var noodles = ramen.getChildByName("noodles");
+		noodles = ramen.getChildByName("noodles");
 		
 		noodles.material = new THREE.ShaderMaterial(
 			{
@@ -123,8 +139,6 @@ function init(){
 				uniforms: uniforms,
 				vertexShader: shaders['noodles_vertex.glsl'],
 				fragmentShader: shaders['noodles_fragment.glsl'],
-				depthWrite: false,
-				//xdepthTest: false
 			}
 		);
 
@@ -148,11 +162,28 @@ function init(){
 		lamp.shadow.camera.near = 1.0;
 		lamp.shadow.camera.far = 20;
 		lamp.shadow.radius = 2;
-		lamp.shadowDarkness = 10;
 
+		soup = ramen.getChildByName("soup");
+		
+		soup.material = new THREE.ShaderMaterial(
+			{
+				transparent: true,
+				uniforms: uniforms,
+				vertexShader: shaders['soup_vertex.glsl'],
+				fragmentShader: shaders['soup_fragment.glsl'],
+			}
+		);
+		
+		soup.material.uniforms.reflectionMap = {
+			type: "t",
+			value: reflectionTarget.texture
+		};
+		soup.material.uniforms.screen_dim = {
+			type: "v",
+			value: [player_width, player_height]
+		};
 	});
 	
-	//
 	var ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
 	scene.add(ambientLight);
 
@@ -218,9 +249,28 @@ function render(){
 	var t = shaderPass.uniforms.time.value = clock.elapsedTime;
 	uniforms.time.value = clock.elapsedTime;
 
+	// Render CubeMap
+	if(noodles){
+		reflectionCamera.copy(camera);
+
+		reflectionCamera.projectionMatrix.elements[5] *= -1.0;
+		
+		// This is not working (not taken into account by render())
+		//scene.scale.set(1.0, -1.0, 1.0);
+		
+		noodles.visible = false;
+		soup.visible = false;
+		sky.visible = false;
+		renderer.render(scene, reflectionCamera, reflectionTarget, true);
+
+		sky.visible = true;
+		soup.visible = true;
+		noodles.visible = true;
+	}
+		
 	camera.position.x = 3.0 * Math.cos(t * 0.3);
+	camera.position.y = 0.3 * Math.sin(t * 0.3) + 2.8;	
 	camera.position.z = 3.0 * Math.sin(t * 0.3);
-	camera.position.y = 0.3 * Math.sin(t * 0.3) + 2.8;
 	camera.lookAt(0, 0.5, 0);
 	
 	composer.render();

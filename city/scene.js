@@ -36,6 +36,31 @@ var shaders_to_load = [
 var loaded_shaders = 0;
 var shaders = {};
 
+function more_trees(vertices){
+	const m = 30;
+	const radius = 0.1;
+	var in_vertices = vertices;
+	var out_vertices = new Float32Array(vertices.length * m);
+	const len = in_vertices.length;
+	
+	for(var i = 0; i < len; i+=3){
+		for(var j = 0; j < m; j++){
+			var x = in_vertices[i  ];
+			var y = in_vertices[i+1];
+			var z = in_vertices[i+2];
+			
+			x += Math.random() * radius;
+			y += Math.random() * radius;
+			
+			out_vertices[i*m+j*3  ] = x;
+			out_vertices[i*m+j*3+1] = y;
+			out_vertices[i*m+j*3+2] = z;
+		}
+	}
+	
+	return out_vertices;
+}
+
 for(var i = 0; i < shaders_to_load.length; i++){	
 	var curr = i;
 
@@ -191,7 +216,8 @@ function init() {
 
 		var geometry = new THREE.BufferGeometry();
 		var vertices = new Float32Array(collada.library.geometries["trees-mesh"].sources["trees-mesh-positions"].array);
-		geometry.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+		vertices = more_trees(vertices);
+		geometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
 		
 		var trees = new THREE.PointCloud(geometry, trees_matrial);
 

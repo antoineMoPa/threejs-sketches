@@ -22,10 +22,10 @@ void main() {
     tree += 1.0 - length(c) * 10.0 - 0.3 * clamp(cos(c.y* 40.0), -0.8 + cos(c.y * 100.0), 0.7) - c.y * 10.0;
     tree *= 10.0;
     tree = clamp(tree, 0.0, 0.9);
-    
-    col.r += (0.1 - 0.1 * abs(c.x)) * tree;
-    col.g += (0.4 - 0.4 * abs(c.x)) * tree;
-    col.b += (0.1 + 0.1 * abs(c.x)) * tree;
+	
+    col.r += 0.2 * tree;
+    col.g += 0.5 * tree + 0.1 * cos(p.x * 2.0);
+    col.b += 0.3 * tree;
 
 	col.a = tree;
 	

@@ -35,7 +35,7 @@ void main() {
 	vec4 blur_col = vec4(0.0);
 	float blur_size = 0.002;
 
-	for(int i = 0; i < 2; i++){
+	for(int i = 0; i < 1; i++){
 		blur_size = blur_size * 1.5;
 		blur_col += 0.1 * texture2D(tDiffuse, vUv + vec2(blur_size, 0.0));
 		blur_col += 0.1 * texture2D(tDiffuse, vUv + vec2(0.0, blur_size));

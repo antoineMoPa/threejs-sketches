@@ -55,14 +55,13 @@ for(var i = 0; i < shaders_to_load.length; i++){
 }
 
 var container, stats, clock, uniforms;
-var camera, reflectionCamera, scene, renderer, composer, ppshader;
+var camera, scene, renderer, composer, ppshader;
 var ramen, sky;
-var renderPass, depthPass, shaderPass, reflectionTarget;
+var renderPass, depthPass, shaderPass;
 var collada;
 var noodles, soup;
 var player_width = 800;
 var player_height = 500;
-var mirror_normal = new THREE.Vector3(0, 1, 0);
 //var player_width = window.innerWidth;
 //var player_height = window.innerHeight;
 
@@ -76,19 +75,6 @@ function init(){
 	camera = new THREE.PerspectiveCamera(45, player_width / player_height, 0.1, 2000);
 	camera.position.set(1.8, 0.5, 2.0);
 	camera.lookAt(0, 0.5, 0);
-	
-	reflectionCamera = new THREE.PerspectiveCamera();
-	
-	reflectionTarget = new THREE.WebGLRenderTarget(
-		256,
-		256		
-	);
-	
-	reflectionTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
-	reflectionCamera.position.set(0.0, 0.82, 0.0);
-	reflectionCamera.lookAt(0, -1.0, 0.0);
-	
-	scene.add(reflectionCamera);
 	
 	var textureLoader = new THREE.TextureLoader();
 
@@ -131,7 +117,7 @@ function init(){
 		ramen = _collada.scene;
 
 		// Special shading
-		noodles = ramen.getChildByName("noodles");
+		noodles = ramen.getObjectByName("noodles");
 		
 		noodles.material = new THREE.ShaderMaterial(
 			{
@@ -142,19 +128,21 @@ function init(){
 			}
 		);
 
-		noodles.renderOrder = -1;
+		noodles.renderOrder = 1;
+		
+		onions = ramen.getObjectByName("onions");
+		onions.renderOrder = 3;
 
-
-		var table = ramen.getChildByName("table");
-		var stick_1 = ramen.getChildByName("stick_1");
-		var stick_2 = ramen.getChildByName("stick_2");
-		var bowl = ramen.getChildByName("bowl");
+		var table = ramen.getObjectByName("table");
+		var stick_1 = ramen.getObjectByName("stick_1");
+		var stick_2 = ramen.getObjectByName("stick_2");
+		var bowl = ramen.getObjectByName("bowl");
 		stick_1.castShadow = true;
 		stick_2.castShadow = true;
 		bowl.castShadow = true;
 		table.receiveShadow = true;
 
-		var lamp = ramen.getChildByName("Lamp");
+		var lamp = ramen.getObjectByName("Lamp");
 		lamp.castShadow = true;
 
 		lamp.shadow.mapSize.width = 1024;
@@ -163,25 +151,28 @@ function init(){
 		lamp.shadow.camera.far = 20;
 		lamp.shadow.radius = 2;
 
-		soup = ramen.getChildByName("soup");
-		
-		soup.material = new THREE.ShaderMaterial(
-			{
-				transparent: true,
-				uniforms: uniforms,
-				vertexShader: shaders['soup_vertex.glsl'],
-				fragmentShader: shaders['soup_fragment.glsl'],
-			}
-		);
-		
-		soup.material.uniforms.reflectionMap = {
-			type: "t",
-			value: reflectionTarget.texture
+		soup = ramen.getObjectByName("soup");
+
+		// We'll override Reflector's default shader
+		var soup_shader = {
+			uniforms: THREE.Reflector.ReflectorShader.uniforms,
+			vertexShader: shaders['soup_vertex.glsl'],
+			fragmentShader: shaders['soup_fragment.glsl']
 		};
-		soup.material.uniforms.screen_dim = {
-			type: "v",
-			value: [player_width, player_height]
-		};
+
+		var reflector = new THREE.Reflector(soup.geometry, {
+			shader: soup_shader
+		});
+
+		reflector.renderOrder = 2.0;
+		
+		scene.add(reflector);
+		reflector.position.y = 0.81;
+		reflector.rotateX(-Math.PI/2.0);
+		reflector.material.transparent = true;
+		
+		// Hide normal soup object, keep only reflector
+		soup.visible = false;
 	});
 	
 	var ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
@@ -249,25 +240,6 @@ function render(){
 	var t = shaderPass.uniforms.time.value = clock.elapsedTime;
 	uniforms.time.value = clock.elapsedTime;
 
-	// Render CubeMap
-	if(noodles){
-		reflectionCamera.copy(camera);
-
-		reflectionCamera.projectionMatrix.elements[5] *= -1.0;
-		
-		// This is not working (not taken into account by render())
-		//scene.scale.set(1.0, -1.0, 1.0);
-		
-		noodles.visible = false;
-		soup.visible = false;
-		sky.visible = false;
-		renderer.render(scene, reflectionCamera, reflectionTarget, true);
-
-		sky.visible = true;
-		soup.visible = true;
-		noodles.visible = true;
-	}
-		
 	camera.position.x = 3.0 * Math.cos(t * 0.3);
 	camera.position.y = 0.3 * Math.sin(t * 0.3) + 2.8;	
 	camera.position.z = 3.0 * Math.sin(t * 0.3);

@@ -60,10 +60,10 @@ var ramen, sky;
 var renderPass, depthPass, shaderPass;
 var collada;
 var noodles, soup;
-var player_width = 800;
-var player_height = 500;
-//var player_width = window.innerWidth;
-//var player_height = window.innerHeight;
+//var player_width = 800;
+//var player_height = 500;
+var player_width = window.innerWidth;
+var player_height = window.innerHeight;
 
 
 function init(){

@@ -1,6 +1,7 @@
 varying vec2 vUv;
 varying vec4 mvPosition;
 varying vec3 vPosition;
+varying vec3 vNormal;
 uniform float time;
 
 uniform vec2 screen_dim;
@@ -69,11 +70,18 @@ void main() {
 
 	col.rgb = vec3(0.01);
 
-	col += windows(vPosition, uv);
-	col += neon(uv);
-
-	col -= 0.01 * length(uv - vec2(0.5));
 	
+	if(vNormal.z < 0.2){
+		// Because normal is pointing up:
+		// not roof : add windows
+		col += windows(vPosition, uv);
+		col += neon(uv);
+		col -= 0.01 * length(uv - vec2(0.5));
+	} else {
+		// Roof
+		col += 0.001 - 0.04 * length(uv - vec2(0.5));
+	}
+
 	col.a = 0.8;
 	
 	gl_FragColor = col;

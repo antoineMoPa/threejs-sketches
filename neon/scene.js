@@ -29,7 +29,8 @@ if (! Detector.webgl) Detector.addGetWebGLMessage();
 var shaders_to_load = [
 	"sky_fragment.glsl", "sky_vertex.glsl",
 	"post_fragment.glsl", "post_vertex.glsl",
-	"buildings_fragment.glsl", "buildings_vertex.glsl"
+	"buildings_fragment.glsl", "buildings_vertex.glsl",
+	"skyroads_fragment.glsl", "skyroads_vertex.glsl"
 ];
 
 var loaded_shaders = 0;
@@ -125,6 +126,18 @@ function init(){
 				fragmentShader: shaders['buildings_fragment.glsl'],
 			}
 		);
+
+		var skyroads = scene_model.getObjectByName("skyroads");
+		
+		skyroads.material = new THREE.ShaderMaterial(
+			{
+				transparent: true,
+				uniforms: uniforms,
+				vertexShader: shaders['skyroads_vertex.glsl'],
+				fragmentShader: shaders['skyroads_fragment.glsl'],
+			}
+		);
+
 		
 	});
 	

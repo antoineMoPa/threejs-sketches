@@ -9,8 +9,11 @@ uniform vec2 screen_dim;
 #define PI2 6.2832
 
 vec4 neon(vec2 uv){
+	
 	vec4 col = vec4(0.0);
 
+	uv = mod(uv, vec2(1.0));
+	
 	// Road side neon
 	float neon = 0.0;
 	float size = 0.01;
@@ -35,14 +38,28 @@ vec4 neon(vec2 uv){
 vec4 cars(vec2 uv){
 	vec4 col = vec4(0.0);
 
+	// I Moved the UVs to the left/right in blender
+	// to indicate wheter the road was uni or bi-
+	// directional
+	if(uv.x < 0.0){
+		uv.x += 1.0;
+		uv.x /= 2.0;
+	} else if(uv.x > 1.0){
+		uv.x -= 1.0;
+		uv.x /= 2.0;
+	} else {
+		// In this case, we are bidirectional
+		// So we change the orientation at the middle
+		if(uv.x > 0.5){
+			uv.y = 1.0 - uv.y;
+			uv.x -= 0.4;
+		}
+	}
+	
 	// Road side neon
 	float light = 0.0;
 	float size = 0.1;
-	if(uv.x > 0.5){
-		uv.y = 1.0 - uv.y;
-		uv.x -= 0.4;
-	}
-
+	
 	// Find sprite coords for small car
 	vec2 p = vec2(0.0);
 	p.x = uv.x;
@@ -58,11 +75,11 @@ vec4 cars(vec2 uv){
 		col = 0.8 * texture2D(tex, p);
 	}
 
-	light = 2.0 * distance(p * vec2(3.0, 0.7), vec2(0.9,-0.4));
+	light = 2.0 * distance(p * vec2(3.0, 0.5), vec2(0.75,-0.4));
 	light = 1.0 - cl01(light);
 	
-	col.r += 0.4 * light;
-	col.g += 0.2 * light;
+	col.r += 0.1 * light;
+	col.g += 0.1 * light;
 	col.b += 0.1 * light;
 	col.a += light;
 	

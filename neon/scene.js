@@ -267,11 +267,13 @@ function render(){
 		elevators[0].position.z = elevators[0].max_height * h;
 	}
 
-	if (t < 8.0) {
+	//t = 0.2;
+	
+	if (t * 0.3 < 8.0) {
 		// Initial translation
 		camera.position.x = 0.24;
-		camera.position.y = 0.3 + t * 0.1;
-		camera.position.z = 10.0 - t;
+		camera.position.y = 0.3 + t * 0.01;
+		camera.position.z = 10.0 - t * 0.3;
 		camera.lookAt(0, 1.8, -100.0);
 	} else {
 		// Rotation mode

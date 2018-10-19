@@ -8,7 +8,7 @@ void main() {
 	vec3 p = normalize(vPosition);
 	
 	col = vec4(0.0);
-	
+
 	col.a = 1.0;
 	
 	gl_FragColor = col;

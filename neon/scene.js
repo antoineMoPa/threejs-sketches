@@ -30,7 +30,9 @@ var shaders_to_load = [
 	"sky_fragment.glsl", "sky_vertex.glsl",
 	"post_fragment.glsl", "post_vertex.glsl",
 	"buildings_fragment.glsl", "buildings_vertex.glsl",
-	"skyroads_fragment.glsl", "skyroads_vertex.glsl"
+	"skyroads_fragment.glsl", "skyroads_vertex.glsl",
+	"ground_fragment.glsl", "ground_vertex.glsl",
+	"misc_fragment.glsl", "misc_vertex.glsl"
 ];
 
 var loaded_shaders = 0;
@@ -59,12 +61,13 @@ var container, stats, clock, uniforms;
 var camera, scene, renderer, composer, ppshader;
 var scene_model, sky, skyroads;
 var renderPass, depthPass, shaderPass;
+var misc_material;
 var collada;
 //var player_width = 800;
 //var player_height = 500;
 var player_width = window.innerWidth;
 var player_height = window.innerHeight;
-
+var elevators = [];
 
 function init(){
 	container = document.getElementById('container');
@@ -150,6 +153,28 @@ function init(){
 			}
 		);
 
+		var ground = scene_model.getObjectByName("ground");
+		
+		ground.material = new THREE.ShaderMaterial(
+			{
+				uniforms: uniforms,
+				vertexShader: shaders['ground_vertex.glsl'],
+				fragmentShader: shaders['ground_fragment.glsl'],
+			}
+		);
+
+		misc_material = new THREE.ShaderMaterial(
+			{
+				uniforms: uniforms,
+				vertexShader: shaders['misc_vertex.glsl'],
+				fragmentShader: shaders['misc_fragment.glsl'],
+			}
+		);
+
+		elevators[0] = scene_model.getObjectByName("elevator_1");
+		
+		elevators[0].material = misc_material;
+		elevators[0].max_height = elevators[0].position.z;
 		
 	});
 	
@@ -222,8 +247,25 @@ function render(){
 		skyroads.material.uniforms.time.value = clock.elapsedTime;
 	}
 
-	var d = 3.0 + 2.0 * Math.cos(t * 0.3); 
+	if(misc_material){
+		misc_material.uniforms.time.value = clock.elapsedTime;
+	}
+
+	if(elevators.length > 0){
+		// Make height a sine, but
+		// clamp height to make it look like it
+		// is staying a bit at top and bottom of building
+		var h = 1.1 * (0.5 * Math.cos(clock.elapsedTime * 0.2) + 0.5);
+		h = Math.min(h, 1.0);
+		h = Math.max(h, 0.0);
+		// Actually, take the cos again for smoother rides
+		h = 0.5 * Math.cos(h * Math.PI * 2.0) + 0.5;
+		
+		elevators[0].position.z = elevators[0].max_height * h;
+	}
 	
+	var d = 3.0 + 2.0 * Math.cos(t * 0.3); 
+	d = 3.7;
 	camera.position.x = d * Math.cos(t * 0.3);
 	camera.position.y = 0.3 * Math.sin(t * 0.3) + 1.8;	
 	camera.position.z = d * Math.sin(t * 0.3);

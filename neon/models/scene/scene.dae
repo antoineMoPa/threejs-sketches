@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.79.0 commit date:2018-03-22, commit time:14:10, hash:f4dc9f9d68b</authoring_tool>
     </contributor>
-    <created>2018-10-18T01:19:22</created>
-    <modified>2018-10-18T01:19:22</modified>
+    <created>2018-10-18T23:53:07</created>
+    <modified>2018-10-18T23:53:07</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -220,6 +220,70 @@
         </triangles>
       </mesh>
     </geometry>
+    <geometry id="Plane_001-mesh" name="Plane.001">
+      <mesh>
+        <source id="Plane_001-mesh-positions">
+          <float_array id="Plane_001-mesh-positions-array" count="27">-1 -1 0 1 -1 0 -1 1 0 1 1 0 -1.400385 0 0 0 -1.400385 0 1.400385 0 0 0 1.400385 0 0 0 0</float_array>
+          <technique_common>
+            <accessor source="#Plane_001-mesh-positions-array" count="9" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_001-mesh-normals">
+          <float_array id="Plane_001-mesh-normals-array" count="3">0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane_001-mesh-normals-array" count="1" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Plane_001-mesh-vertices">
+          <input semantic="POSITION" source="#Plane_001-mesh-positions"/>
+        </vertices>
+        <triangles count="8">
+          <input semantic="VERTEX" source="#Plane_001-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Plane_001-mesh-normals" offset="1"/>
+          <p>8 0 3 0 7 0 8 0 2 0 4 0 0 0 8 0 4 0 1 0 8 0 5 0 8 0 6 0 3 0 8 0 7 0 2 0 0 0 5 0 8 0 1 0 6 0 8 0</p>
+        </triangles>
+      </mesh>
+    </geometry>
+    <geometry id="Cube_001-mesh" name="Cube.001">
+      <mesh>
+        <source id="Cube_001-mesh-positions">
+          <float_array id="Cube_001-mesh-positions-array" count="72">-0.0870397 -0.1294498 -0.1108965 -0.0870397 -0.1294498 0.1108965 -0.1268778 0.07735192 -0.1616538 -0.1268778 0.07735192 0.1616538 0.0870397 -0.1294498 -0.1108965 0.0870397 -0.1294498 0.1108965 0.1268778 0.07735192 -0.1616538 0.1268778 0.07735192 0.1616538 -0.1268778 -0.06261539 -0.1616538 -0.1268778 -0.06261539 0.1616538 0.1268778 -0.06261539 -0.1616538 0.1268778 -0.06261539 0.1616538 0.105748 1.209408 -0.1108965 0.105748 1.209408 0.1108965 0.1455861 1.002606 -0.1616538 0.1455861 1.002606 0.1616538 -0.06833148 1.209408 -0.1108965 -0.06833148 1.209408 0.1108965 -0.1081694 1.002606 -0.1616538 -0.1081694 1.002606 0.1616538 0.1455861 1.142574 -0.1616538 0.1455861 1.142574 0.1616538 -0.1081695 1.142574 -0.1616538 -0.1081695 1.142574 0.1616538</float_array>
+          <technique_common>
+            <accessor source="#Cube_001-mesh-positions-array" count="24" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Cube_001-mesh-normals">
+          <float_array id="Cube_001-mesh-normals-array" count="81">-1 0 0 0 1 0 0.8589785 -0.5120118 0 0 -1 0 0 -0.6048046 -0.796374 0 -0.6048046 0.796374 0 0 1 0 0 -1 1 0 0 -0.8589783 -0.512012 0 1 3.29289e-7 0 -0.8589786 0.5120117 0 0 0.6048055 -0.7963733 0 0.6048038 0.7963746 0 0 1 0 0 -1 -1 -1.64645e-7 0 0.8589782 0.5120122 0 0.8589783 -0.512012 0 0 -0.6048044 -0.7963741 0 -0.6048044 0.7963741 -0.8589786 -0.5120117 0 1 1.64645e-7 0 0 0.6048038 -0.7963746 0 0.6048055 0.7963733 -1 -3.29289e-7 0 0.8589786 0.5120117 0</float_array>
+          <technique_common>
+            <accessor source="#Cube_001-mesh-normals-array" count="27" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Cube_001-mesh-vertices">
+          <input semantic="POSITION" source="#Cube_001-mesh-positions"/>
+        </vertices>
+        <triangles count="40">
+          <input semantic="VERTEX" source="#Cube_001-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Cube_001-mesh-normals" offset="1"/>
+          <p>9 0 2 0 8 0 3 1 6 1 2 1 11 2 4 2 10 2 5 3 0 3 4 3 8 4 4 4 0 4 11 5 1 5 5 5 7 6 9 6 11 6 2 7 10 7 8 7 7 8 10 8 6 8 1 9 8 9 0 9 21 10 14 10 20 10 15 3 18 3 14 3 23 11 16 11 22 11 17 1 12 1 16 1 22 12 12 12 20 12 23 13 13 13 17 13 19 14 21 14 23 14 18 15 20 15 14 15 19 16 22 16 18 16 13 17 20 17 12 17 9 0 3 0 2 0 3 1 7 1 6 1 11 18 5 18 4 18 5 3 1 3 0 3 8 19 10 19 4 19 11 20 9 20 1 20 7 14 3 14 9 14 2 15 6 15 10 15 7 8 11 8 10 8 1 21 9 21 8 21 21 22 15 22 14 22 15 3 19 3 18 3 23 11 17 11 16 11 17 1 13 1 12 1 22 23 16 23 12 23 23 24 21 24 13 24 19 14 15 14 21 14 18 15 22 15 20 15 19 25 23 25 22 25 13 26 21 26 20 26</p>
+        </triangles>
+      </mesh>
+    </geometry>
   </library_geometries>
   <library_controllers/>
   <library_visual_scenes>
@@ -245,6 +309,14 @@
       <node id="skyroads" name="skyroads" type="NODE">
         <matrix sid="transform">0.7824022 0 0 2.28018e-8 0 0.7824022 0 -1.173656 0 0 0.7824022 0.9101826 0 0 0 1</matrix>
         <instance_geometry url="#Plane-mesh" name="skyroads"/>
+      </node>
+      <node id="ground" name="ground" type="NODE">
+        <matrix sid="transform">18.71042 0 0 -0.4686193 0 18.71042 0 0.2727067 0 0 18.71042 0.01898599 0 0 0 1</matrix>
+        <instance_geometry url="#Plane_001-mesh" name="ground"/>
+      </node>
+      <node id="elevator_1" name="elevator_1" type="NODE">
+        <matrix sid="transform">0.2925744 0 0 0.05909047 0 0.2925744 0 0.2436856 0 0 0.2925744 3.011135 0 0 0 1</matrix>
+        <instance_geometry url="#Cube_001-mesh" name="elevator_1"/>
       </node>
     </visual_scene>
   </library_visual_scenes>

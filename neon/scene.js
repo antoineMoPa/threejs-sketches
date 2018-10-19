@@ -57,7 +57,7 @@ for(var i = 0; i < shaders_to_load.length; i++){
 
 var container, stats, clock, uniforms;
 var camera, scene, renderer, composer, ppshader;
-var scene_model, sky;
+var scene_model, sky, skyroads;
 var renderPass, depthPass, shaderPass;
 var collada;
 //var player_width = 800;
@@ -127,14 +127,26 @@ function init(){
 			}
 		);
 
-		var skyroads = scene_model.getObjectByName("skyroads");
+		skyroads = scene_model.getObjectByName("skyroads");
+
+		var texture = THREE.ImageUtils.loadTexture("./models/scene/tex.png");
 		
 		skyroads.material = new THREE.ShaderMaterial(
 			{
 				transparent: true,
-				uniforms: uniforms,
+				uniforms: {
+					time: {
+						type: "f",
+						value: 0.0
+					},
+					tex: {
+						type: "t",
+						value: texture
+					}
+				},
 				vertexShader: shaders['skyroads_vertex.glsl'],
 				fragmentShader: shaders['skyroads_fragment.glsl'],
+				side: THREE.DoubleSide
 			}
 		);
 
@@ -206,10 +218,17 @@ function render(){
 	var t = shaderPass.uniforms.time.value = clock.elapsedTime;
 	uniforms.time.value = clock.elapsedTime;
 
-	camera.position.x = 3.0 * Math.cos(t * 0.3);
+	if(skyroads){
+		skyroads.material.uniforms.time.value = clock.elapsedTime;
+	}
+
+	var d = 3.0 + 2.0 * Math.cos(t * 0.3); 
+	
+	camera.position.x = d * Math.cos(t * 0.3);
 	camera.position.y = 0.3 * Math.sin(t * 0.3) + 1.8;	
-	camera.position.z = 3.0 * Math.sin(t * 0.3);
-	camera.lookAt(0, 1.9, 0);
+	camera.position.z = d * Math.sin(t * 0.3);
+
+	camera.lookAt(0, 1.8, 0);
 	
 	composer.render();
 }

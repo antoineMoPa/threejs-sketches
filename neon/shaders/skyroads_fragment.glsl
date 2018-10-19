@@ -38,15 +38,13 @@ vec4 neon(vec2 uv){
 vec4 cars(vec2 uv){
 	vec4 col = vec4(0.0);
 
-	// I Moved the UVs to the left/right in blender
+	// I Moved the UVs to the left in blender
 	// to indicate wheter the road was uni or bi-
 	// directional
 	if(uv.x < 0.0){
 		uv.x += 1.0;
 		uv.x /= 2.0;
-	} else if(uv.x > 1.0){
-		uv.x -= 1.0;
-		uv.x /= 2.0;
+		uv.y = 1.0 - uv.y;
 	} else {
 		// In this case, we are bidirectional
 		// So we change the orientation at the middle

@@ -1,23 +1,26 @@
 /*
-  Copyright 2018 Antoine Morin-Paulhus
-  Started from Three.js Collada example code (the one with the elf)
-  
-  This file is part of neon.
-  
+   Copyright 2018 Antoine Morin-Paulhus
+   Started from Three.js Collada example code (the one with the elf)
+   
+   This file is part of neon.
+   
 
-  neon is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-  
-  neon is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  
-  You should have received a copy of the GNU General Public License
-  along with neon.  If not, see <https://www.gnu.org/licenses/>.
-*/
+   neon is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   
+   neon is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with neon.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+// This is best enjoyed with: https://www.youtube.com/watch?v=p_wcC1l1cLk
+// (Voyage - Paradise) Uploaded by Electronic Gems
 
 function start(){
 	init();

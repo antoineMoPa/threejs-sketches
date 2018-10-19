@@ -14,7 +14,7 @@ void main() {
 
 	col.r = 0.1;
 	col.b = 0.2;
-	col.g += 0.3 * cos(p.x * 100.0);
+	col.g += 0.1 * cos(p.x * 100.0);
 	
 	col.a = 1.0;
 	

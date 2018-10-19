@@ -9,6 +9,10 @@ void main() {
 	
 	col = vec4(0.0);
 
+	col.r += 0.1 - 0.1* p.y;
+	col.b += 0.1 - 0.1* p.y;
+	col.b += 0.1* p.y;
+
 	col.a = 1.0;
 	
 	gl_FragColor = col;

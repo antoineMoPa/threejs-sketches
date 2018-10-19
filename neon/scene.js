@@ -263,14 +263,24 @@ function render(){
 		
 		elevators[0].position.z = elevators[0].max_height * h;
 	}
-	
-	var d = 3.0 + 2.0 * Math.cos(t * 0.3); 
-	d = 3.7;
-	camera.position.x = d * Math.cos(t * 0.3);
-	camera.position.y = 0.3 * Math.sin(t * 0.3) + 1.8;	
-	camera.position.z = d * Math.sin(t * 0.3);
 
-	camera.lookAt(0, 1.8, 0);
+	if (t < 8.0) {
+		// Initial translation
+		camera.position.x = 0.24;
+		camera.position.y = 0.3 + t * 0.1;
+		camera.position.z = 10.0 - t;
+		camera.lookAt(0, 1.8, -100.0);
+	} else {
+		// Rotation mode
+		var d = 3.0 + 2.0 * Math.cos(t * 0.3); 
+		d = 3.7;
+		camera.position.x = d * Math.cos(t * 0.3);
+		camera.position.y = 0.3 * Math.sin(t * 0.3) + 1.8;	
+		camera.position.z = d * Math.sin(t * 0.3);
+		camera.lookAt(0, 1.8, 0);
+	}
+	
+	
 	
 	composer.render();
 }

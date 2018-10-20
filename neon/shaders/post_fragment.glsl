@@ -23,18 +23,68 @@ float getDepth( const in vec2 screenPosition ) {
 #endif
 }
 
-void main() {
+vec2 noise(vec2 value){
+	vec2 original = value;
+	value *= 8.3;
+	value = vec2(cos(value.x * 3000.0), sin(value.y * 2000.0));
+	return original + value * 0.03 * cos(value.x * 100.0 + value.y * 10.0);
+}
+
+/*
+  Screen Space Ambiant Occlusion
+  Except I do the contrary, I give more light to
+  closer objects because almost everything emits neon
+  in this scene. So it's more like radiosity.
+ */
+vec4 ssao(){
+	// Compare depths
+	float offset = 0.01;
 	vec4 col = vec4(0.0);
+	float depths[4];
+
+	float depth = getDepth(vUv);
+	depths[0] = getDepth(noise(vUv + vec2(offset, 0.0)));
+	depths[1] = getDepth(noise(vUv + vec2(-offset, 0.0)));
+	depths[2] = getDepth(noise(vUv + vec2(0.0, offset)));
+	depths[3] = getDepth(noise(vUv + vec2(0.0, offset)));
+	
+	for(int i = 0; i < 4; i++){
+		float diff = depths[i] - depth;
+		float adiff = abs(diff);
+		float min_threshold = 0.01;
+		float max_threshold = 0.4;
+		float blend = 0.0;
+		if(adiff > min_threshold &&
+		   adiff < max_threshold &&
+		   depths[i] > depth){
+			blend = clamp(adiff/max_threshold, 0.0, 1.0);
+		}
+
+		if(adiff < 0.001 && depths[i] < 0.99){
+			blend = 1.0 - blend;
+			col.r += 0.02 * (blend);
+			col.g += 0.01 * (blend);
+			col.b += 0.02 * (blend);
+		}
+	}
+	
+	return col;
+}
+
+void main() {
 	vec2 p = vUv - 0.5;
 	vec4 diffuse = texture2D(tDiffuse, vUv);
+	vec4 col = vec4(0.0);
 	float depth = getDepth(vUv);
 	float z = cameraFar + ((depth) * ( cameraNear - cameraFar ) - cameraNear);
 
 	vec2 offset = vec2(0.0);
-
-	vec4 blur_col = vec4(0.0);
+	
+	vec4 blur_col = col;
 	float blur_size = 0.001;
 
+	diffuse += 0.2 * ssao();
+	
 	for(int i = 0; i < 3; i++){
 		blur_size = blur_size * 1.5;
 		blur_col += 0.25 * texture2D(tDiffuse, vUv + vec2(blur_size, 0.0));
@@ -43,7 +93,7 @@ void main() {
 		blur_col += 0.25 * texture2D(tDiffuse, vUv + vec2(0.0, -blur_size));
 	}
 
-	col = blur_col + diffuse;
+	col = diffuse;
 	col /= 2.0;
 
 	float d = length(p);

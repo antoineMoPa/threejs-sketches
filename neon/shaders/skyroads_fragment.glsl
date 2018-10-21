@@ -13,24 +13,31 @@ vec4 neon(vec2 uv){
 	vec4 col = vec4(0.0);
 
 	uv = mod(uv, vec2(1.0));
-	
+
+	/*
+	  There are some very annoying glitches when rendering far-away neons without making 
+	  them bigger and dimmer.
+	 */
+	float distance_modifier = 0.03 * mvPosition.z;
+	float distance_color_modifier = (1.0 + 3.0 * distance_modifier);
+
 	// Road side neon
 	float neon = 0.0;
-	float size = 0.01;
+	float size = 0.01 - distance_modifier;
 	neon += saturate(1.0 - abs(uv.x - 0.1)/size);
 	neon += saturate(1.0 - abs(uv.x - 0.9)/size);
 	col.r += neon;
-	col.g += 0.5 * neon;
-	col.b += 0.8 * neon;
+	col.g += 0.5 * neon * distance_color_modifier;
+	col.b += 0.8 * neon * distance_color_modifier;
 
 	// Same with blur
 	neon = 0.0;
-	size = 0.03;
+	size = 0.03 - distance_modifier;
 	neon += saturate(1.0 - abs(uv.x - 0.1)/size);
 	neon += saturate(1.0 - abs(uv.x - 0.9)/size);
-	col.r += 0.5 * neon;
-	col.g += 0.3 * neon;
-	col.b += 0.2 * neon;
+	col.r += 0.5 * neon * distance_color_modifier;
+	col.g += 0.3 * neon * distance_color_modifier;
+	col.b += 0.2 * neon * distance_color_modifier;
 	
 	return col;
 }

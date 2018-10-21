@@ -286,8 +286,6 @@ function render(){
 		elevators[0].position.z = elevators[0].max_height * h;
 	}
 
-	//t = 0.2;
-	
 	if (t * 0.3 < 8.0) {
 		// Initial translation
 		camera.position.x = 0.18;

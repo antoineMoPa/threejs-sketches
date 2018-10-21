@@ -1,3 +1,4 @@
+// -*- mode: web; -*-
 /*
    Copyright 2018 Antoine Morin-Paulhus
    Started from Three.js Collada example code (the one with the elf)
@@ -21,6 +22,7 @@
 
 // This is best enjoyed with: https://www.youtube.com/watch?v=p_wcC1l1cLk
 // (Voyage - Paradise) Uploaded by Electronic Gems
+// Or any synth pop song really
 
 function start(){
 	init();
@@ -31,7 +33,8 @@ if (! Detector.webgl) Detector.addGetWebGLMessage();
 
 var shaders_to_load = [
 	"sky_fragment.glsl", "sky_vertex.glsl",
-	"post_fragment.glsl", "post_vertex.glsl",
+	"post_fragment_2.glsl", "post_vertex_2.glsl",
+	"post_fragment_1.glsl", "post_vertex_1.glsl",
 	"buildings_fragment.glsl", "buildings_vertex.glsl",
 	"skyroads_fragment.glsl", "skyroads_vertex.glsl",
 	"ground_fragment.glsl", "ground_vertex.glsl",
@@ -61,9 +64,9 @@ for(var i = 0; i < shaders_to_load.length; i++){
 }
 
 var container, stats, clock, uniforms;
-var camera, scene, renderer, composer, ppshader;
+var camera, scene, renderer, composer, ppshader1, ppshader2;
 var scene_model, sky, skyroads;
-var renderPass, depthPass, shaderPass;
+var renderPass, depthPass, shaderPass1, shaderPass2;
 var misc_material;
 var collada;
 //var player_width = 800;
@@ -79,8 +82,6 @@ function init(){
 	clock = new THREE.Clock();
 	
 	camera = new THREE.PerspectiveCamera(45, player_width / player_height, 0.1, 2000);
-	camera.position.set(1.8, 0.5, 2.0);
-	camera.lookAt(0, 0.5, 0);
 	
 	var textureLoader = new THREE.TextureLoader();
 
@@ -192,14 +193,24 @@ function init(){
 	ppuniforms['cameraFar'] = { type: "f", value: camera.far };
 	ppuniforms['tDiffuse'] = { type: "t", value: null };
 	ppuniforms['tDepth'] = { type: "t", value: null };
+	ppuniforms['tRender'] = { type: "t", value: null };
 	
-	ppshader = {
+	ppshader1 = {
 		uniforms: ppuniforms,
 		defines: {
 			'DEPTH_PACKING': 1
 		},
-		vertexShader: shaders['post_vertex.glsl'],
-		fragmentShader: shaders['post_fragment.glsl']
+		vertexShader: shaders['post_vertex_1.glsl'],
+		fragmentShader: shaders['post_fragment_1.glsl']
+	};
+
+	ppshader2 = {
+		uniforms: ppuniforms,
+		defines: {
+			'DEPTH_PACKING': 1
+		},
+		vertexShader: shaders['post_vertex_2.glsl'],
+		fragmentShader: shaders['post_fragment_2.glsl']
 	};
 	
 	renderer = new THREE.WebGLRenderer({alpha: true});
@@ -215,17 +226,25 @@ function init(){
 	window.addEventListener('resize', onWindowResize, false);
 
 	composer = new THREE.EffectComposer(renderer);
+	var savePass = new THREE.SavePass();
 	renderPass = new THREE.RenderPass(scene, camera);
 	depthPass = new THREE.DepthPass(scene, camera);
-	shaderPass = new THREE.ShaderPass(ppshader);
+	shaderPass1 = new THREE.ShaderPass(ppshader1, "pass1");
+	shaderPass2 = new THREE.ShaderPass(ppshader2);
 
-	shaderPass.uniforms['tDepth'].value = depthPass.renderTarget.texture;
+	shaderPass1.uniforms['tDepth'].value = depthPass.renderTarget.texture;
+	shaderPass2.uniforms['tDepth'].value = depthPass.renderTarget.texture;
+
+	shaderPass1.uniforms['tRender'].value = savePass.renderTarget.texture;
+	shaderPass2.uniforms['tRender'].value = savePass.renderTarget.texture;
 
 	composer.addPass(renderPass);
+	composer.addPass(savePass);
 	composer.addPass(depthPass);
-	composer.addPass(shaderPass);
+	composer.addPass(shaderPass1);
+	composer.addPass(shaderPass2);
 
-	shaderPass.renderToScreen = true;
+	shaderPass2.renderToScreen = true;
 }
 
 function onWindowResize(){
@@ -243,7 +262,7 @@ function animate(){
 function render(){
 	var delta = clock.getDelta();
 
-	var t = shaderPass.uniforms.time.value = clock.elapsedTime;
+	var t = shaderPass2.uniforms.time.value = clock.elapsedTime;
 	uniforms.time.value = clock.elapsedTime;
 
 	if(skyroads){
@@ -271,7 +290,7 @@ function render(){
 	
 	if (t * 0.3 < 8.0) {
 		// Initial translation
-		camera.position.x = 0.24;
+		camera.position.x = 0.18;
 		camera.position.y = 0.3 + t * 0.01;
 		camera.position.z = 10.0 - t * 0.3;
 		camera.lookAt(0, 1.8, -100.0);

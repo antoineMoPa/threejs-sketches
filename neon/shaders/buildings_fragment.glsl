@@ -15,13 +15,12 @@ vec4 neon(vec2 uv){
 	  There are some very annoying glitches when rendering far-away neons without making 
 	  them bigger and dimmer.
 	 */
-	float distance_modifier = 0.001 * mvPosition.z;
-	float distance_color_modifier = (1.0 + 3.0 * distance_modifier);
+	float size_modifier = 0.001 * mvPosition.z;
+	float color_modifier = (1.0 + 3.0 * size_modifier);
 
-	//distance_modifier = 0.0;
 	// X neon
 	float neon = 0.0;
-	float size = 0.01 - distance_modifier;
+	float size = 0.01 - size_modifier;
 	neon += saturate(1.0 - abs(uv.x - 0.1)/size);
 	neon += saturate(1.0 - abs(uv.x - 0.9)/size);
 	col.r += neon;
@@ -29,27 +28,27 @@ vec4 neon(vec2 uv){
 
 	// Same with blur
 	neon = 0.0;
-	size = 0.03 - distance_modifier;
+	size = 0.03 - size_modifier;
 	neon += saturate(1.0 - abs(uv.x - 0.1)/size);
 	neon += saturate(1.0 - abs(uv.x - 0.9)/size);
 	col.r += 0.3 * neon;
 	col.b += 0.1 * neon;
 
-	distance_modifier *= 8.0;
+	size_modifier *= 8.0;
 	
 	// Y neon
 	neon = 0.0;
-	size = 0.01 - distance_modifier;
+	size = 0.01 - size_modifier;
 	neon += saturate(1.0 - abs(uv.y - 0.1)/size);
 	neon += saturate(1.0 - abs(uv.y - 0.9)/size);
 	
-	col.b += 0.4 * neon * distance_color_modifier;
+	col.b += 0.4 * neon * color_modifier;
 
 	neon = 0.0;
-	size = 0.05 - distance_modifier;
+	size = 0.05 - size_modifier;
 	neon += saturate(1.0 - abs(uv.y - 0.1)/size);
 	neon += saturate(1.0 - abs(uv.y - 0.9)/size);
-	col.b += 0.2 * neon * distance_color_modifier;
+	col.b += 0.2 * neon * color_modifier;
 
 	return col;
 }

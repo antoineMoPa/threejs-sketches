@@ -17,11 +17,21 @@
 		 #container{
 			 text-align:center;
 		 }
-		 audio{
+		 .audio-block{
+			 color: #fff;
 			 position:absolute;
 			 bottom:0;
 			 right:0;
 			 z-index:100;
+			 width:100%;
+		 }
+		 .audio-block p{
+			 padding:5px;
+			 padding-left:10px;
+			 margin:0;
+		 }
+		 audio{
+			 width:100%;
 		 }
 		</style>
 	</head>
@@ -39,8 +49,13 @@
 		<script src="js/Reflector.js"></script>
 		<script src="js/stats.min.js"></script>
 		<script src="scene.js"></script>
-		<audio autoplay controls>
-			<source src="audio/neon_city.mp3" type="audio/mp3">
-		</audio>
+		<div class="audio-block">
+			<p>
+				Audio
+			</p>
+			<audio autoplay controls>
+				<source src="audio/neon_city.mp3" type="audio/mp3">
+			</audio>
+		</div>
 	</body>
 </html>

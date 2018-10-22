@@ -315,7 +315,6 @@ function render(){
 	} else {
 		// Rotation mode
 		var d = 3.0 + 2.0 * Math.cos(t * 0.3); 
-		d = 3.7;
 		camera.position.x = d * Math.cos(t * 0.3);
 		camera.position.y = 0.3 * Math.sin(t * 0.3) + 1.8;	
 		camera.position.z = d * Math.sin(t * 0.3);

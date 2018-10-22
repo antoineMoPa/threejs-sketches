@@ -1,5 +1,6 @@
 varying vec2 vUv;
 varying vec4 mvPosition;
+varying vec4 mvNormal;
 varying vec3 vPosition;
 varying vec3 vNormal;
 uniform float time;
@@ -65,10 +66,14 @@ vec4 windows(vec3 p, vec2 uv){
 	windows *= cl01(10.0 * cos(p.z * 60.0));
 
 	windows = cl01(windows * 10.0);
-	
+
 	col.r += 0.04 * windows;
 	col.g += 0.02 * windows;
 	col.b += 0.01 * windows;
+
+	if(windows > 0.2){
+		col.rgb += 0.06 * clamp(10.0 * cos(mvNormal.xyz + p), 0.0, 1.0);
+	}
 	
 	return col;
 }

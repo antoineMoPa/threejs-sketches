@@ -75,6 +75,7 @@ var collada;
 var player_width = window.innerWidth;
 var player_height = window.innerHeight;
 var elevators = [];
+var trains = [];
 
 function init(){
 	container = document.getElementById('container');
@@ -173,6 +174,7 @@ function init(){
 				uniforms: uniforms,
 				vertexShader: shaders['misc_vertex.glsl'],
 				fragmentShader: shaders['misc_fragment.glsl'],
+				transparent: true
 			}
 		);
 
@@ -180,6 +182,14 @@ function init(){
 		
 		elevators[0].material = misc_material;
 		elevators[0].max_height = elevators[0].position.z;
+
+		var train_tracks = scene_model.getObjectByName("train_tracks_1");
+		train_tracks.material = misc_material;
+		trains[0] = scene_model.getObjectByName("train_1");
+		
+		trains[0].material = misc_material;
+		trains[0].initial_position = trains[0].position.clone();
+		
 		
 	});
 	
@@ -264,25 +274,26 @@ function render(){
 	var delta = clock.getDelta();
 
 	var t = shaderPass2.uniforms.time.value = clock.elapsedTime;
-	uniforms.time.value = clock.elapsedTime;
-
+	
+	if(!audio.paused){
+		t = audio.currentTime;
+	}
+	
+	uniforms.time.value = t;
+	
 	if(skyroads){
-		skyroads.material.uniforms.time.value = clock.elapsedTime;
+		skyroads.material.uniforms.time.value = t;
 	}
 
 	if(misc_material){
-		misc_material.uniforms.time.value = clock.elapsedTime;
-	}
-
-	if(!audio.paused){
-		t = audio.currentTime;
+		misc_material.uniforms.time.value = t;
 	}
 	
 	if(elevators.length > 0){
 		// Make height a sine, but
 		// clamp height to make it look like it
 		// is staying a bit at top and bottom of building
-		var h = 1.1 * (0.5 * Math.cos(clock.elapsedTime * 0.2) + 0.5);
+		var h = 1.1 * (0.5 * Math.cos(t * 0.2) + 0.5);
 		h = Math.min(h, 1.0);
 		h = Math.max(h, 0.0);
 		// Actually, take the cos again for smoother rides
@@ -291,6 +302,10 @@ function render(){
 		elevators[0].position.z = elevators[0].max_height * h;
 	}
 
+	if(trains.length > 0){
+		trains[0].position.y = trains[0].initial_position.y + (t * 0.7 % 10.0);
+	}
+	
 	if (t * 0.3 < 8.0) {
 		// Initial translation
 		camera.position.x = 0.18;

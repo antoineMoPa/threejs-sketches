@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.79.0 commit date:2018-03-22, commit time:14:10, hash:f4dc9f9d68b</authoring_tool>
     </contributor>
-    <created>2018-10-21T17:38:48</created>
-    <modified>2018-10-21T17:38:48</modified>
+    <created>2018-10-22T01:38:06</created>
+    <modified>2018-10-22T01:38:06</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -278,13 +278,107 @@
             </accessor>
           </technique_common>
         </source>
+        <source id="Cube_001-mesh-map-0">
+          <float_array id="Cube_001-mesh-map-0-array" count="240">1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 1 0 1 0 0 1 1 0 1 0 0 1 1 0 1 0 0 1 1 0 1 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 0 0 1 1 0 1 0 0 1 1 0 1 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 0 0 1 0 1 1 0 0 1 0 1 1 0 0 1 0 1 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 0 0 1 0 1 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 0 1</float_array>
+          <technique_common>
+            <accessor source="#Cube_001-mesh-map-0-array" count="120" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
         <vertices id="Cube_001-mesh-vertices">
           <input semantic="POSITION" source="#Cube_001-mesh-positions"/>
         </vertices>
         <triangles count="40">
           <input semantic="VERTEX" source="#Cube_001-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#Cube_001-mesh-normals" offset="1"/>
-          <p>9 0 2 0 8 0 3 1 6 1 2 1 11 2 4 2 10 2 5 3 0 3 4 3 8 4 4 4 0 4 11 5 1 5 5 5 7 6 9 6 11 6 2 7 10 7 8 7 7 8 10 8 6 8 1 9 8 9 0 9 21 10 14 10 20 10 15 3 18 3 14 3 23 11 16 11 22 11 17 1 12 1 16 1 22 12 12 12 20 12 23 13 13 13 17 13 19 14 21 14 23 14 18 15 20 15 14 15 19 16 22 16 18 16 13 17 20 17 12 17 9 0 3 0 2 0 3 1 7 1 6 1 11 18 5 18 4 18 5 3 1 3 0 3 8 19 10 19 4 19 11 20 9 20 1 20 7 14 3 14 9 14 2 15 6 15 10 15 7 8 11 8 10 8 1 21 9 21 8 21 21 22 15 22 14 22 15 3 19 3 18 3 23 11 17 11 16 11 17 1 13 1 12 1 22 23 16 23 12 23 23 24 21 24 13 24 19 14 15 14 21 14 18 15 22 15 20 15 19 25 23 25 22 25 13 26 21 26 20 26</p>
+          <input semantic="TEXCOORD" source="#Cube_001-mesh-map-0" offset="2" set="0"/>
+          <p>9 0 0 2 0 1 8 0 2 3 1 3 6 1 4 2 1 5 11 2 6 4 2 7 10 2 8 5 3 9 0 3 10 4 3 11 8 4 12 4 4 13 0 4 14 11 5 15 1 5 16 5 5 17 7 6 18 9 6 19 11 6 20 2 7 21 10 7 22 8 7 23 7 8 24 10 8 25 6 8 26 1 9 27 8 9 28 0 9 29 21 10 30 14 10 31 20 10 32 15 3 33 18 3 34 14 3 35 23 11 36 16 11 37 22 11 38 17 1 39 12 1 40 16 1 41 22 12 42 12 12 43 20 12 44 23 13 45 13 13 46 17 13 47 19 14 48 21 14 49 23 14 50 18 15 51 20 15 52 14 15 53 19 16 54 22 16 55 18 16 56 13 17 57 20 17 58 12 17 59 9 0 60 3 0 61 2 0 62 3 1 63 7 1 64 6 1 65 11 18 66 5 18 67 4 18 68 5 3 69 1 3 70 0 3 71 8 19 72 10 19 73 4 19 74 11 20 75 9 20 76 1 20 77 7 14 78 3 14 79 9 14 80 2 15 81 6 15 82 10 15 83 7 8 84 11 8 85 10 8 86 1 21 87 9 21 88 8 21 89 21 22 90 15 22 91 14 22 92 15 3 93 19 3 94 18 3 95 23 11 96 17 11 97 16 11 98 17 1 99 13 1 100 12 1 101 22 23 102 16 23 103 12 23 104 23 24 105 21 24 106 13 24 107 19 14 108 15 14 109 21 14 110 18 15 111 22 15 112 20 15 113 19 25 114 23 25 115 22 25 116 13 26 117 21 26 118 20 26 119</p>
+        </triangles>
+      </mesh>
+    </geometry>
+    <geometry id="train-mesh" name="train">
+      <mesh>
+        <source id="train-mesh-positions">
+          <float_array id="train-mesh-positions-array" count="72">-0.3110423 2.163696 -0.5392418 -0.3110423 2.188864 0.1891996 -0.3110423 5.197056 -0.5392418 -0.3110423 4.921825 0.1891996 0.2972305 2.163696 -0.5392418 0.2972305 2.188864 0.1891996 0.2972305 5.197056 -0.5392418 0.2972305 4.921825 0.1891996 -0.3110423 -0.9065627 -0.5392418 -0.3110423 -0.8813952 0.1891996 -0.3110423 1.989182 -0.5392418 -0.3110423 1.989182 0.1891996 0.2972305 -0.9065627 -0.5392418 0.2972305 -0.8813952 0.1891996 0.2972305 1.989182 -0.5392418 0.2972305 1.989182 0.1891996 -0.3110423 -3.927475 -0.5392418 -0.3110423 -3.902306 0.1891996 -0.3110423 -1.031731 -0.5392418 -0.3110423 -1.031731 0.1891996 0.2972305 -3.927475 -0.5392418 0.2972305 -3.902306 0.1891996 0.2972305 -1.031731 -0.5392418 0.2972305 -1.031731 0.1891996</float_array>
+          <technique_common>
+            <accessor source="#train-mesh-positions-array" count="24" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="train-mesh-normals">
+          <float_array id="train-mesh-normals-array" count="36">-1 0 0 0 0.935454 0.3534489 1 0 0 0 -0.9994038 0.0345295 0 0 -1 0 0 1 0 1 0 0 -0.9994038 0.03452926 0 -0.9994037 0.03453272 0 0.9354542 0.353448 0 -0.9994037 0.03452897 0 -0.9994036 0.03453165</float_array>
+          <technique_common>
+            <accessor source="#train-mesh-normals-array" count="12" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="train-mesh-map-0">
+          <float_array id="train-mesh-map-0-array" count="216">1 0 2 1 1 1 2 0 1 1 1 0 2 0 1 1 1 0 2 0 1 1 1 0 2 0 1 1 1 0 2 0 1 1 1 0 2 0 1 1 1 0 2 0 1 1 1 0 1 0 2 1 1 1 2 0 1 1 1 0 2 0 1 1 1 0 2 0 1 1 1 0 2 0 1 1 1 0 2 0 1 1 1 0 1 0 2 1 1 1 2 0 1 1 1 0 2 0 1 1 1 0 2 0 1 1 1 0 1 0 2 0 2 1 2 0 2 1 1 1 2 0 2 1 1 1 2 0 2 1 1 1 2 0 2 1 1 1 2 0 2 1 1 1 2 0 2 1 1 1 2 0 2 1 1 1 1 0 2 0 2 1 2 0 2 1 1 1 2 0 2 1 1 1 2 0 2 1 1 1 2 0 2 1 1 1 2 0 2 1 1 1 1 0 2 0 2 1 2 0 2 1 1 1 2 0 2 1 1 1 2 0 2 1 1 1</float_array>
+          <technique_common>
+            <accessor source="#train-mesh-map-0-array" count="108" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="train-mesh-vertices">
+          <input semantic="POSITION" source="#train-mesh-positions"/>
+        </vertices>
+        <triangles count="36">
+          <input semantic="VERTEX" source="#train-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#train-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#train-mesh-map-0" offset="2" set="0"/>
+          <p>0 0 0 3 0 1 2 0 2 3 1 3 6 1 4 2 1 5 7 2 6 4 2 7 6 2 8 5 3 9 0 3 10 4 3 11 6 4 12 0 4 13 2 4 14 3 5 15 5 5 16 7 5 17 9 0 18 10 0 19 8 0 20 11 6 21 14 6 22 10 6 23 14 2 24 13 2 25 12 2 26 13 7 27 8 7 28 12 7 29 14 4 30 8 4 31 10 4 32 11 5 33 13 5 34 15 5 35 17 0 36 18 0 37 16 0 38 19 6 39 22 6 40 18 6 41 22 2 42 21 2 43 20 2 44 21 8 45 16 8 46 20 8 47 22 4 48 16 4 49 18 4 50 19 5 51 21 5 52 23 5 53 0 0 54 1 0 55 3 0 56 3 9 57 7 9 58 6 9 59 7 2 60 5 2 61 4 2 62 5 10 63 1 10 64 0 10 65 6 4 66 4 4 67 0 4 68 3 5 69 1 5 70 5 5 71 9 0 72 11 0 73 10 0 74 11 6 75 15 6 76 14 6 77 14 2 78 15 2 79 13 2 80 13 10 81 9 10 82 8 10 83 14 4 84 12 4 85 8 4 86 11 5 87 9 5 88 13 5 89 17 0 90 19 0 91 18 0 92 19 6 93 23 6 94 22 6 95 22 2 96 23 2 97 21 2 98 21 11 99 17 11 100 16 11 101 22 4 102 20 4 103 16 4 104 19 5 105 17 5 106 21 5 107</p>
+        </triangles>
+      </mesh>
+    </geometry>
+    <geometry id="train_tracks-mesh" name="train_tracks">
+      <mesh>
+        <source id="train_tracks-mesh-positions">
+          <float_array id="train_tracks-mesh-positions-array" count="12">1.979564 -29.59848 2.159067 2.999948 -29.59848 2.159067 1.979564 224.3628 2.159067 2.999948 224.3628 2.159067</float_array>
+          <technique_common>
+            <accessor source="#train_tracks-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="train_tracks-mesh-normals">
+          <float_array id="train_tracks-mesh-normals-array" count="3">0 0 1</float_array>
+          <technique_common>
+            <accessor source="#train_tracks-mesh-normals-array" count="1" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="train_tracks-mesh-map-0">
+          <float_array id="train_tracks-mesh-map-0-array" count="12">3 0 2 1 2 0 3 0 3 1 2 1</float_array>
+          <technique_common>
+            <accessor source="#train_tracks-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="train_tracks-mesh-vertices">
+          <input semantic="POSITION" source="#train_tracks-mesh-positions"/>
+        </vertices>
+        <triangles count="2">
+          <input semantic="VERTEX" source="#train_tracks-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#train_tracks-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#train_tracks-mesh-map-0" offset="2" set="0"/>
+          <p>1 0 0 2 0 1 0 0 2 1 0 3 3 0 4 2 0 5</p>
         </triangles>
       </mesh>
     </geometry>
@@ -293,7 +387,7 @@
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
       <node id="Camera" name="Camera" type="NODE">
-        <matrix sid="transform">0.001783326 0.04052944 0.9991767 14.0809 0.9999984 -7.54403e-5 -0.001781733 0.1355935 3.16557e-6 0.9991783 -0.04052952 0.7178955 0 0 0 1</matrix>
+        <matrix sid="transform">0.9999984 -7.54364e-5 -0.001781636 0.2193563 -0.001783229 -0.04052944 -0.9991767 -10.48238 3.16557e-6 0.9991783 -0.04052952 0.7178955 0 0 0 1</matrix>
         <instance_camera url="#Camera-camera"/>
       </node>
       <node id="Lamp" name="Lamp" type="NODE">
@@ -321,6 +415,14 @@
       <node id="elevator_1" name="elevator_1" type="NODE">
         <matrix sid="transform">0.2925744 0 0 0.05909047 0 0.2925744 0 0.2436856 0 0 0.2925744 3.011135 0 0 0 1</matrix>
         <instance_geometry url="#Cube_001-mesh" name="elevator_1"/>
+      </node>
+      <node id="train_1" name="train_1" type="NODE">
+        <matrix sid="transform">0.09235515 0 0 1.007072 0 0.09235515 0 -9.403412 0 0 0.09235515 0.09117311 0 0 0 1</matrix>
+        <instance_geometry url="#train-mesh" name="train_1"/>
+      </node>
+      <node id="train_tracks_1" name="train_tracks_1" type="NODE">
+        <matrix sid="transform">0.09235515 0 0 0.7792822 0 0.09235515 0 -8.87775 0 0 0.09235515 -0.1660761 0 0 0 1</matrix>
+        <instance_geometry url="#train_tracks-mesh" name="train_tracks_1"/>
       </node>
     </visual_scene>
   </library_visual_scenes>

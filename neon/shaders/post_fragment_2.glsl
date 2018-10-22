@@ -82,6 +82,10 @@ void main() {
 	col.r = 1.3 * pow(col.r, 0.86);
 	col.g = 1.4 * pow(col.g, 0.83);
 	col.b = 1.3 * pow(col.b, 0.7);
+
+	if(time < 8.0){
+		col *= time/8.0;
+	}
 	
 	col.a = 1.0;
 	

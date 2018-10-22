@@ -41,6 +41,7 @@ var shaders_to_load = [
 	"misc_fragment.glsl", "misc_vertex.glsl"
 ];
 
+var audio = document.querySelectorAll("audio")[0];
 var loaded_shaders = 0;
 var shaders = {};
 
@@ -273,6 +274,10 @@ function render(){
 		misc_material.uniforms.time.value = clock.elapsedTime;
 	}
 
+	if(!audio.paused){
+		t = audio.currentTime;
+	}
+	
 	if(elevators.length > 0){
 		// Make height a sine, but
 		// clamp height to make it look like it

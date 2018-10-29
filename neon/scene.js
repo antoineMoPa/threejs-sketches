@@ -38,7 +38,8 @@ var shaders_to_load = [
 	"buildings_fragment.glsl", "buildings_vertex.glsl",
 	"skyroads_fragment.glsl", "skyroads_vertex.glsl",
 	"ground_fragment.glsl", "ground_vertex.glsl",
-	"misc_fragment.glsl", "misc_vertex.glsl"
+	"misc_fragment.glsl", "misc_vertex.glsl",
+	"bus_fragment.glsl", "bus_vertex.glsl"
 ];
 
 var audio = document.querySelectorAll("audio")[0];
@@ -68,7 +69,7 @@ var container, stats, clock, uniforms;
 var camera, scene, renderer, composer, ppshader1, ppshader2;
 var scene_model, sky, skyroads;
 var renderPass, depthPass, shaderPass1, shaderPass2;
-var misc_material;
+var misc_material, bus_material;
 var collada;
 //var player_width = 800;
 //var player_height = 500;
@@ -76,6 +77,7 @@ var player_width = window.innerWidth;
 var player_height = window.innerHeight;
 var elevators = [];
 var trains = [];
+var bus = null;
 
 function init(){
 	container = document.getElementById('container');
@@ -84,6 +86,7 @@ function init(){
 	clock = new THREE.Clock();
 	
 	camera = new THREE.PerspectiveCamera(45, player_width / player_height, 0.1, 2000);
+	camera.up = new THREE.Vector3(0,1.0,0.0);
 	
 	var textureLoader = new THREE.TextureLoader();
 
@@ -99,7 +102,7 @@ function init(){
 	uniforms.time = {
 		value: 0.0
 	};
-			
+	
 	var skyMaterial = new THREE.ShaderMaterial(
 		{
 			uniforms: uniforms,
@@ -154,8 +157,7 @@ function init(){
 					}
 				},
 				vertexShader: shaders['skyroads_vertex.glsl'],
-				fragmentShader: shaders['skyroads_fragment.glsl'],
-				side: THREE.DoubleSide
+				fragmentShader: shaders['skyroads_fragment.glsl']
 			}
 		);
 
@@ -190,6 +192,31 @@ function init(){
 		trains[0].material = misc_material;
 		trains[0].initial_position = trains[0].position.clone();
 		
+		bus = scene_model.getObjectByName("bus");
+
+		var bus_texture = THREE.ImageUtils.loadTexture("./models/scene/bus.png");
+		
+		bus_material = new THREE.ShaderMaterial(
+			{
+				uniforms: {
+					time: {
+						type: "f",
+						value: 0.0
+					},
+					tex: {
+						type: "t",
+						value: bus_texture
+					}
+				},
+				vertexShader: shaders['bus_vertex.glsl'],
+				fragmentShader: shaders['bus_fragment.glsl'],
+				side: THREE.DoubleSide,
+				transparent: true
+			}
+		);
+
+		bus.material[0] = bus_material;
+		bus.material[1] = bus_material;
 		
 	});
 	
@@ -273,11 +300,13 @@ function animate(){
 function render(){
 	var delta = clock.getDelta();
 
-	var t = shaderPass2.uniforms.time.value = clock.elapsedTime;
-	
+	var t = clock.elapsedTime;
+	var x, y, z, dx, dy;
 	if(!audio.paused){
 		t = audio.currentTime;
 	}
+
+	shaderPass2.uniforms.time.value = t;
 	
 	uniforms.time.value = t;
 	
@@ -287,6 +316,10 @@ function render(){
 
 	if(misc_material){
 		misc_material.uniforms.time.value = t;
+	}
+
+	if(bus_material){
+		bus_material.uniforms.time.value = t;
 	}
 	
 	if(elevators.length > 0){
@@ -305,23 +338,43 @@ function render(){
 	if(trains.length > 0){
 		trains[0].position.y = trains[0].initial_position.y + (t * 0.7 % 10.0);
 	}
-	
-	if (t * 0.3 < 8.0) {
-		// Initial translation
-		camera.position.x = 0.18;
-		camera.position.y = 0.3 + t * 0.01;
-		camera.position.z = 10.0 - t * 0.3;
-		camera.lookAt(0, 1.8, -100.0);
-	} else {
-		// Rotation mode
-		var d = 3.0 + 2.0 * Math.cos(t * 0.3); 
-		camera.position.x = d * Math.cos(t * 0.3);
-		camera.position.y = 0.3 * Math.sin(t * 0.3) + 1.8;	
-		camera.position.z = d * Math.sin(t * 0.3);
-		camera.lookAt(0, 1.8, 0);
+
+	if(bus != null) {
+		if (t * 0.3 < 8.0) {
+			// Initial translation
+			x = 0.18;
+			y = -10.0 + t * 0.3;
+			z = 0.3 + t * 0.01;
+			bus.position.x = x;
+			bus.position.y = y;
+			bus.position.z = z;
+			bus.rotation.z = 0.0;
+			camera.position.x = x;
+			camera.position.y = z + 0.1;
+			camera.position.z = -y + 0.4;
+			camera.lookAt(bus.position.x, bus.position.z, -bus.position.y);
+		} else {
+			// Rotation mode
+			var d = 1.0; 
+			x = d * Math.cos(t * 0.3);
+			y = d * Math.sin(t * 0.3);
+			z = 0.3 * Math.sin(t * 0.3) + 1.8;
+
+			dx = -d * Math.sin(t * 0.3);
+			dy = d * Math.cos(t * 0.3);
+
+			var angle = Math.atan2(dy,dx) - Math.PI/2.0;
+			bus.rotation.z = angle;
+			
+			bus.position.x = x;
+			bus.position.y = y;
+			bus.position.z = z;
+			camera.position.x = x - 0.6 * dx + 0.2 * Math.cos(t * 0.03);
+			camera.position.y = z + 0.1 + 0.2 * Math.cos(t * 0.03);
+			camera.position.z = -y + 0.6 * dy;
+			camera.lookAt(bus.position.x, bus.position.z, -bus.position.y);
+		}
 	}
-	
-	
 	
 	composer.render();
 }

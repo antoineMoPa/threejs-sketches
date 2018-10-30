@@ -23,6 +23,7 @@
 // This is best enjoyed with: https://www.youtube.com/watch?v=p_wcC1l1cLk
 // (Voyage - Paradise) Uploaded by Electronic Gems
 // Or any synth pop song really
+// Update, I made a synth pop song with lmms :D
 
 function start(){
 	init();
@@ -78,6 +79,8 @@ var player_height = window.innerHeight;
 var elevators = [];
 var trains = [];
 var bus = null;
+var buildings = null;
+var ground = null;
 
 function init(){
 	container = document.getElementById('container');
@@ -128,7 +131,7 @@ function init(){
 		collada = _collada;
 		scene_model = _collada.scene;
 		
-		var buildings = scene_model.getObjectByName("buildings");
+		buildings = scene_model.getObjectByName("buildings");
 		
 		buildings.material = new THREE.ShaderMaterial(
 			{
@@ -161,7 +164,7 @@ function init(){
 			}
 		);
 
-		var ground = scene_model.getObjectByName("ground");
+		ground = scene_model.getObjectByName("ground");
 		
 		ground.material = new THREE.ShaderMaterial(
 			{
@@ -282,7 +285,7 @@ function init(){
 	composer.addPass(shaderPass1);
 	composer.addPass(shaderPass2);
 
-	shaderPass2.renderToScreen = true;
+	renderPass.renderToScreen = true;
 }
 
 function onWindowResize(){
@@ -291,10 +294,39 @@ function onWindowResize(){
 	renderer.setSize(player_width, player_height);
 }
 
+// Called once in a while to adapt effect to
+// users GPU
+var post_processing_enabled = true;
+function updateComposer(){
+	var fps = stats.getFrameRate();
+	
+	if(post_processing_enabled && fps < 24){
+		composer.passes[0].renderToScreen = true;
+		composer.passes[1].enabled = false;
+		composer.passes[2].enabled = false;
+		composer.passes[3].enabled = false;
+		composer.passes[4].enabled = false;
+		post_processing_enabled = false;
+	} else if (!post_processing_enabled && fps > 50){
+		composer.passes[1].enabled = true;
+		composer.passes[2].enabled = true;
+		composer.passes[3].enabled = true;
+		composer.passes[4].enabled = true;
+		composer.passes[0].renderToScreen = false;
+		composer.passes[4].renderToScreen = true;
+		post_processing_enabled = true;
+	}
+}
+
+var frame = 0;
 function animate(){
 	requestAnimationFrame(animate);
 	render();
+	if(frame % 30 == 0){
+		updateComposer();
+	}
 	stats.update();
+	frame++;
 }
 
 function render(){

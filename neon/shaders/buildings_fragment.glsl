@@ -22,33 +22,33 @@ vec4 neon(vec2 uv){
 	// X neon
 	float neon = 0.0;
 	float size = 0.01 - size_modifier;
-	neon += saturate(1.0 - abs(uv.x - 0.1)/size);
-	neon += saturate(1.0 - abs(uv.x - 0.9)/size);
-	col.r += neon;
+	neon += saturate(1.0 - abs(uv.x - 0.05)/size);
+	neon += saturate(1.0 - abs(uv.x - 0.95)/size);
+	col.r += 0.7 * neon;
 	col.b += 0.3 * neon;
 
 	// Same with blur
 	neon = 0.0;
 	size = 0.03 - size_modifier;
-	neon += saturate(1.0 - abs(uv.x - 0.1)/size);
-	neon += saturate(1.0 - abs(uv.x - 0.9)/size);
+	neon += saturate(1.0 - abs(uv.x - 0.05)/size);
+	neon += saturate(1.0 - abs(uv.x - 0.95)/size);
 	col.r += 0.3 * neon;
-	col.b += 0.1 * neon;
+	col.b += 0.2 * neon;
 
 	size_modifier *= 8.0;
 	
 	// Y neon
 	neon = 0.0;
 	size = 0.01 - size_modifier;
-	neon += saturate(1.0 - abs(uv.y - 0.1)/size);
-	neon += saturate(1.0 - abs(uv.y - 0.9)/size);
+	neon += saturate(1.0 - abs(uv.y - 0.05)/size);
+	neon += saturate(1.0 - abs(uv.y - 0.95)/size);
 	
 	col.b += 0.4 * neon * color_modifier;
 
 	neon = 0.0;
 	size = 0.05 - size_modifier;
-	neon += saturate(1.0 - abs(uv.y - 0.1)/size);
-	neon += saturate(1.0 - abs(uv.y - 0.9)/size);
+	neon += saturate(1.0 - abs(uv.y - 0.05)/size);
+	neon += saturate(1.0 - abs(uv.y - 0.95)/size);
 	col.b += 0.2 * neon * color_modifier;
 
 	return col;
@@ -61,8 +61,12 @@ vec4 windows(vec3 p, vec2 uv){
 
 	float windows = 0.0;
 
-	windows += cl01(10.0 * cos(p.x * 60.0));
-	windows *= cl01(10.0 * cos(p.y * 60.0));
+	if(abs(vNormal.x) > abs(vNormal.y)){
+		windows = cl01(10.0 * cos(p.y * 60.0));
+	} else {
+		windows = cl01(10.0 * cos(p.x * 60.0));
+	}
+	
 	windows *= cl01(10.0 * cos(p.z * 60.0));
 
 	windows = cl01(windows * 10.0);
@@ -75,6 +79,12 @@ vec4 windows(vec3 p, vec2 uv){
 		col.rgb += 0.06 * clamp(10.0 * cos(mvNormal.xyz + p), 0.0, 1.0);
 	}
 	
+	col.rgb *= 1.0 + 0.3 * windows;
+
+	if(uv.x > 0.9 || uv.x < 0.1 || uv.y < 0.1 || uv.y > 0.9){
+		col *= 0.0;
+	}
+	
 	return col;
 }
 
@@ -82,21 +92,24 @@ void main() {
 	vec4 col = vec4(0.0);
 	vec2 uv = vUv;
 
-	col.rgb = vec3(0.01);
+	col.rgb = vec3(0.0);
 
-	
-	if(vNormal.z < 0.2){
+	if(vNormal.z < -0.1){
+		// Here we are probably in some weird building with floor larger that floor below
+		col.rgb = vec3(0.0);
+		col.a = 1.0;
+	} else if(vNormal.z < 0.2){
 		// Because normal is pointing up:
 		// not roof : add windows
 		col += windows(vPosition, uv);
 		col += neon(uv);
 		col -= 0.01 * length(uv - vec2(0.5));
+		col.a = 1.0;
 	} else {
 		// Roof
 		col += 0.001 - 0.04 * length(uv - vec2(0.5));
+		col.a = 1.0;
 	}
-
-	col.a = 0.8;
 	
 	gl_FragColor = col;
 }

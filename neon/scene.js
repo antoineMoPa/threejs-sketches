@@ -374,7 +374,7 @@ function render(){
 	if(bus != null) {
 		if (t * 0.3 < 8.0) {
 			// Initial translation
-			x = 0.18;
+			x = 0.0;
 			y = -10.0 + t * 0.3;
 			z = 0.3 + t * 0.01;
 			bus.position.x = x;

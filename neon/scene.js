@@ -47,6 +47,54 @@ var audio = document.querySelectorAll("audio")[0];
 var loaded_shaders = 0;
 var shaders = {};
 
+/*
+   Yeah I might reuse this for shadergif.com
+ */
+class AudioFFT {
+	constructor(audioElement){
+		this._dim = 64;
+		this.audioElement = audioElement;
+		this.audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+		this.analyser = this.audioCtx.createAnalyser();
+		this.analyser.fftSize = this._dim*this._dim;
+		this.source = this.audioCtx.createMediaElementSource(this.audioElement);
+		this.source.connect(this.analyser);
+		this.source.connect(this.audioCtx.destination);
+		
+		var bufferLength = this.analyser.frequencyBinCount;
+
+
+		this._canvas = document.createElement("canvas");
+		this._canvas.width = this._dim;
+		this._canvas.height = this._dim;
+		this._canvas_ctx = this._canvas.getContext("2d");
+		
+		document.body.appendChild(this._canvas);
+		this._canvas.style.position="absolute";
+		this._canvas.style.top="0";
+		this._canvas.style.right="0";
+		this._canvas.style.width = "100%";
+		this._canvas.style.height = "200%";
+		this._canvas.style.zIndex="1000";
+	}
+
+	update() {
+		this._uint8_buffer = new Uint8Array(this._dim * this._dim * 4);
+		this.analyser.getByteFrequencyData(this._uint8_buffer);
+		this._clamped_buffer = Uint8ClampedArray.from(this._uint8_buffer);
+		this._image_data = new ImageData(this._clamped_buffer, this._dim, this._dim);
+		this._canvas_ctx.putImageData(this._image_data,0,0);
+	}
+
+	getCanvas() {
+		return this._canvas;
+	}
+};
+
+var afft = null;
+
+afft = new AudioFFT(audio);
+
 for(var i = 0; i < shaders_to_load.length; i++){	
 	var curr = i;
 
@@ -104,6 +152,10 @@ function init(){
 
 	uniforms.time = {
 		value: 0.0
+	};
+
+	uniforms.afft = {
+		value: null
 	};
 	
 	var skyMaterial = new THREE.ShaderMaterial(
@@ -341,6 +393,11 @@ function render(){
 	shaderPass2.uniforms.time.value = t;
 	
 	uniforms.time.value = t;
+
+	if(afft != null){
+		afft.update();
+		afft.getCanvas();
+	}
 	
 	if(skyroads){
 		skyroads.material.uniforms.time.value = t;
@@ -382,7 +439,7 @@ function render(){
 			bus.position.z = z;
 			bus.rotation.z = 0.0;
 			camera.position.x = x;
-			camera.position.y = z + 0.1;
+			camera.position.y = z + 0.03;
 			camera.position.z = -y + 0.4;
 			camera.lookAt(bus.position.x, bus.position.z, -bus.position.y);
 		} else {

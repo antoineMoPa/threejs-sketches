@@ -43,6 +43,10 @@ void main() {
 		f *= 0.6 + 0.4 * cos(p.y * 0.2);
 		col.rgb += f;
 		col.a = f;
+	} else if (vUv.x < 4.0){
+		vec2 uv = vUv - vec2(3.0, 0.0);
+		col.rgba = texture2D(tex, uv);
+		col.rgb *= 3.0;
 	}
 	 
 	gl_FragColor = col;

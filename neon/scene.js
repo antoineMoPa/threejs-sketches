@@ -228,13 +228,26 @@ function init(){
 
 		misc_material = new THREE.ShaderMaterial(
 			{
-				uniforms: uniforms,
+				uniforms: {
+					time: {
+						type: "f",
+						value: 0.0
+					},
+					tex: {
+						type: "t",
+						value: texture
+					}
+				},
 				vertexShader: shaders['misc_vertex.glsl'],
 				fragmentShader: shaders['misc_fragment.glsl'],
-				transparent: true
+				transparent: true,
+				side: THREE.DoubleSide
 			}
 		);
 
+		var displays = scene_model.getObjectByName("displays");
+		displays.material = misc_material;
+		
 		elevators[0] = scene_model.getObjectByName("elevator_1");
 		
 		elevators[0].material = misc_material;

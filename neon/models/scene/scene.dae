@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.79.0 commit date:2018-03-22, commit time:14:10, hash:f4dc9f9d68b</authoring_tool>
     </contributor>
-    <created>2018-10-30T00:45:44</created>
-    <modified>2018-10-30T00:45:44</modified>
+    <created>2018-11-02T17:19:20</created>
+    <modified>2018-11-02T17:19:20</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -107,6 +107,9 @@
     </image>
     <image id="bus_png" name="bus_png">
       <init_from>bus.png</init_from>
+    </image>
+    <image id="tex_png" name="tex_png">
+      <init_from>tex.png</init_from>
     </image>
   </library_images>
   <library_effects>
@@ -211,6 +214,45 @@
       </profile_COMMON>
       <extra><technique profile="MAX3D"><double_sided>1</double_sided></technique></extra>
     </effect>
+    <effect id="ads-effect">
+      <profile_COMMON>
+        <newparam sid="tex_png-surface">
+          <surface type="2D">
+            <init_from>tex_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="tex_png-sampler">
+          <sampler2D>
+            <source>tex_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <phong>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color sid="ambient">0 0 0 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="tex_png-sampler" texcoord="UVMap"/>
+            </diffuse>
+            <specular>
+              <color sid="specular">0.5 0.5 0.5 1</color>
+            </specular>
+            <shininess>
+              <float sid="shininess">50</float>
+            </shininess>
+            <transparent>
+              <texture texture="tex_png-sampler" texcoord="UVMap"/>
+            </transparent>
+            <index_of_refraction>
+              <float sid="index_of_refraction">1</float>
+            </index_of_refraction>
+          </phong>
+        </technique>
+      </profile_COMMON>
+    </effect>
   </library_effects>
   <library_materials>
     <material id="Material-material" name="Material">
@@ -221,6 +263,9 @@
     </material>
     <material id="bus_decals-material" name="bus_decals">
       <instance_effect url="#bus_decals-effect"/>
+    </material>
+    <material id="ads-material" name="ads">
+      <instance_effect url="#ads-effect"/>
     </material>
   </library_materials>
   <library_geometries>
@@ -515,6 +560,48 @@
       </mesh>
       <extra><technique profile="MAYA"><double_sided>1</double_sided></technique></extra>
     </geometry>
+    <geometry id="Plane_002-mesh" name="Plane.002">
+      <mesh>
+        <source id="Plane_002-mesh-positions">
+          <float_array id="Plane_002-mesh-positions-array" count="84">1.405169 -0.8307586 1.151075 1.204413 -0.8307586 0.9503198 1.405169 -0.6853905 1.151075 1.204413 -0.6853905 0.9503198 3.881952 0.1787677 -0.3855897 3.72142 0.1787679 -1.01158 3.881952 0.8961995 -0.38559 3.72142 0.8961994 -1.011579 2.478389 -0.615464 -2.286396 1.852215 -0.6154639 -2.44621 2.478388 0.3675071 -2.286396 1.852215 0.3675069 -2.44621 5.626103 -0.7446604 -5.316642 4.935656 -0.7446603 -5.247328 5.626102 -0.1832479 -5.316641 4.935656 -0.1832479 -5.247328 6.31533 -0.7629224 -3.657721 6.053099 -0.7629222 -3.936536 6.31533 -0.3380029 -3.657721 6.053099 -0.338003 -3.936536 4.340368 -0.976066 -1.719866 4.078137 -0.9760659 -1.998682 4.340368 -0.6868794 -1.719866 4.078137 -0.6868795 -1.998682 -0.3831236 -0.1683949 4.396622 -1.021406 -0.1683948 3.734553 -0.3831236 0.1207917 4.396621 -1.021406 0.1207916 3.734553</float_array>
+          <technique_common>
+            <accessor source="#Plane_002-mesh-positions-array" count="28" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_002-mesh-normals">
+          <float_array id="Plane_002-mesh-normals-array" count="42">-0.7071075 -8.53774e-7 0.7071061 -0.9686558 0 0.2484069 -0.2472958 -6.5681e-7 0.96894 0.09988832 -6.11998e-7 0.9949987 -0.7284404 1.46592e-6 0.6851092 -0.7284397 2.15396e-6 0.68511 -0.719921 1.12061e-6 0.6940561 -0.7071069 0 0.7071067 -0.9686559 -1.43256e-7 0.2484068 -0.2472969 0 0.9689397 0.09988802 0 0.9949988 -0.7284393 -1.31024e-6 0.6851103 -0.7284393 3.36611e-7 0.6851104 -0.7199204 0 0.6940566</float_array>
+          <technique_common>
+            <accessor source="#Plane_002-mesh-normals-array" count="14" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_002-mesh-map-0">
+          <float_array id="Plane_002-mesh-map-0-array" count="84">3.48696 0.8321192 3.175277 0.9882544 3.173324 0.8321192 3.741275 0.9592572 3.498247 0.8322547 3.683262 0.7742419 3.918025 1.001957 3.718346 0.7771532 3.912154 0.7701297 3.196773 0.7953706 3.018827 0.672789 3.196773 0.6727889 3.406651 0.8066614 3.212793 0.6128033 3.406651 0.6128033 3.64857 0.7807247 3.439623 0.63874 3.64857 0.63874 3.984748 0.7731541 3.684425 0.6463106 3.984748 0.6463106 3.48696 0.8321192 3.488914 0.9882544 3.175277 0.9882544 3.741275 0.9592572 3.556259 1.01727 3.498247 0.8322547 3.918025 1.001957 3.724217 1.00898 3.718346 0.7771532 3.196773 0.7953706 3.018827 0.7953706 3.018827 0.672789 3.406651 0.8066614 3.212793 0.8066614 3.212793 0.6128033 3.64857 0.7807247 3.439623 0.7807247 3.439623 0.63874 3.984748 0.7731541 3.684425 0.7731541 3.684425 0.6463106</float_array>
+          <technique_common>
+            <accessor source="#Plane_002-mesh-map-0-array" count="42" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Plane_002-mesh-vertices">
+          <input semantic="POSITION" source="#Plane_002-mesh-positions"/>
+        </vertices>
+        <triangles material="ads-material" count="14">
+          <input semantic="VERTEX" source="#Plane_002-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Plane_002-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Plane_002-mesh-map-0" offset="2" set="0"/>
+          <p>0 0 0 3 0 1 1 0 2 6 1 3 5 1 4 4 1 5 10 2 6 9 2 7 8 2 8 14 3 9 13 3 10 12 3 11 18 4 12 17 4 13 16 4 14 22 5 15 21 5 16 20 5 17 26 6 18 25 6 19 24 6 20 0 7 21 2 7 22 3 7 23 6 8 24 7 8 25 5 8 26 10 9 27 11 9 28 9 9 29 14 10 30 15 10 31 13 10 32 18 11 33 19 11 34 17 11 35 22 12 36 23 12 37 21 12 38 26 13 39 27 13 40 25 13 41</p>
+        </triangles>
+      </mesh>
+    </geometry>
   </library_geometries>
   <library_controllers/>
   <library_visual_scenes>
@@ -564,6 +651,16 @@
             <technique_common>
               <instance_material symbol="bus-material" target="#bus-material"/>
               <instance_material symbol="bus_decals-material" target="#bus_decals-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="displays" name="displays" type="NODE">
+        <matrix sid="transform">0.1692328 -1.30214e-8 0.1724733 -0.2541318 0.1724733 1.27767e-8 -0.1692328 -8.568368 0 0.2416336 1.82428e-8 0.2800937 0 0 0 1</matrix>
+        <instance_geometry url="#Plane_002-mesh" name="displays">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="ads-material" target="#ads-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>

@@ -202,6 +202,30 @@
          stdDeviation="1.6708865"
          id="feGaussianBlur5942" />
     </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter6172"
+       x="-0.012102537"
+       width="1.0242051"
+       y="-1.416375"
+       height="3.83275">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.59015625"
+         id="feGaussianBlur6174" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter6194"
+       x="-0.03630761"
+       width="1.0726152"
+       y="-4.249125"
+       height="9.49825">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="1.7704688"
+         id="feGaussianBlur6196" />
+    </filter>
   </defs>
   <sodipodi:namedview
      pagecolor="#000000"
@@ -217,8 +241,8 @@
      id="namedview3124"
      showgrid="false"
      inkscape:zoom="2.8284271"
-     inkscape:cx="470.72032"
-     inkscape:cy="373.61071"
+     inkscape:cx="94.924929"
+     inkscape:cy="292.67571"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
@@ -226,6 +250,15 @@
      inkscape:showpageshadow="false"
      showguides="true"
      inkscape:guide-bbox="true" />
+  <rect
+     style="fill:#ffffff;fill-opacity:1;stroke:none"
+     id="rect5990"
+     width="123.54511"
+     height="65.357269"
+     x="3.8115962"
+     y="199.67017"
+     rx="2.782567"
+     ry="0" />
   <g
      transform="translate(0,-2.1213204)"
      id="g5912"
@@ -774,4 +807,44 @@
        id="path5906"
        inkscape:connector-curvature="0" />
   </g>
+  <g
+     id="g5955" />
+  <path
+     id="path5982"
+     style="fill:#000000;fill-opacity:1;stroke:none"
+     d="m 53.191901,225.12325 9.333755,-5.38885 11.130915,17.74066 -12.878569,0.57802 z m -10.563382,8.50442 9.333755,-5.38885 6.833946,8.69912 -12.878569,0.57801 z m 20.679164,-18.53068 9.333754,-5.38885 15.248843,27.40884 -12.878569,0.57802 z"
+     inkscape:connector-curvature="0" />
+  <text
+     xml:space="preserve"
+     style="font-size:21.06208038px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     x="24.937813"
+     y="305.02682"
+     id="text5986"
+     sodipodi:linespacing="125%"
+     transform="scale(1.2044243,0.83027218)"><tspan
+       sodipodi:role="line"
+       id="tspan5988"
+       x="24.937813"
+       y="305.02682"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:condensed;letter-spacing:1.03730762px;font-family:Universalis ADF Cd Std;-inkscape-font-specification:Universalis ADF Cd Std Bold Condensed">abibas</tspan></text>
+  <path
+     style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#f400ff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;filter:url(#filter6172);enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+     d="m 7.0625,269.0625 0,1 117.03125,0 0,-1 -117.03125,0 z"
+     id="path5992"
+     inkscape:connector-curvature="0" />
+  <path
+     inkscape:connector-curvature="0"
+     id="path6176"
+     d="m 7.0625,269.0625 0,1 117.03125,0 0,-1 -117.03125,0 z"
+     style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#008cff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;filter:url(#filter6194);enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans" />
+  <path
+     inkscape:connector-curvature="0"
+     id="path6198"
+     d="m 7.0625,195.5625 0,1 117.03125,0 0,-1 -117.03125,0 z"
+     style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#f400ff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;filter:url(#filter6172);enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans" />
+  <path
+     style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#0093ff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;filter:url(#filter6194);enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+     d="m 7.0625,195.5625 0,1 117.03125,0 0,-1 -117.03125,0 z"
+     id="path6200"
+     inkscape:connector-curvature="0" />
 </svg>

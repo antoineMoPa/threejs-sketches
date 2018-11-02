@@ -457,7 +457,7 @@ function render(){
 			camera.lookAt(bus.position.x, bus.position.z, -bus.position.y);
 		} else {
 			// Rotation mode
-			var d = 1.0; 
+			var d = 1.1; 
 			x = d * Math.cos(t * 0.3);
 			y = d * Math.sin(t * 0.3);
 			z = 0.3 * Math.sin(t * 0.3) + 1.8;

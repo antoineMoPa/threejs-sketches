@@ -93,7 +93,7 @@ class AudioFFT {
 
 var afft = null;
 
-afft = new AudioFFT(audio);
+//afft = new AudioFFT(audio);
 
 for(var i = 0; i < shaders_to_load.length; i++){	
 	var curr = i;
@@ -451,10 +451,10 @@ function render(){
 			bus.position.y = y;
 			bus.position.z = z;
 			bus.rotation.z = 0.0;
-			camera.position.x = x;
-			camera.position.y = z + 0.03;
-			camera.position.z = -y + 0.4;
-			camera.lookAt(bus.position.x, bus.position.z, -bus.position.y);
+			camera.position.x = x - 0.1;
+			camera.position.y = z + 0.1;
+			camera.position.z = -y + 0.4 + 0.1 * Math.cos(t * 0.4);
+			camera.lookAt(bus.position.x - 0.1, bus.position.z + 0.1, -bus.position.y);
 		} else {
 			// Rotation mode
 			var d = 1.1; 
@@ -473,8 +473,8 @@ function render(){
 			bus.position.z = z;
 			camera.position.x = x - 0.6 * dx + 0.2 * Math.cos(t * 0.03);
 			camera.position.y = z + 0.1 + 0.2 * Math.cos(t * 0.03);
-			camera.position.z = -y + 0.6 * dy;
-			camera.lookAt(bus.position.x, bus.position.z, -bus.position.y);
+			camera.position.z = -y - 0.4 + 0.6 * dy;
+			camera.lookAt(bus.position.x, bus.position.z + 0.1, -bus.position.y);
 		}
 	}
 	

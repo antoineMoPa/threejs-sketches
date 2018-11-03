@@ -46,7 +46,11 @@ void main() {
 	} else if (vUv.x < 4.0){
 		vec2 uv = vUv - vec2(3.0, 0.0);
 		col.rgba = texture2D(tex, uv);
-		col.rgb *= 3.0;
+
+		float l = length(vPosition.xz - vec2(0.0, 0.0));
+		if(l > 30.0){
+			col *= 1.0 - pow((l-30.0)/60.0, 2.0);
+		}
 	}
 	 
 	gl_FragColor = col;

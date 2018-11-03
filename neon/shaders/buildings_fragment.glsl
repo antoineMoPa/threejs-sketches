@@ -111,5 +111,12 @@ void main() {
 		col.a = 1.0;
 	}
 	
+	if(vPosition.z < 0.15){
+		col.rgb = vec3(0.3, 0.0, 0.4);
+		if(vPosition.z < 0.13){
+			col.r -= 0.1;
+		}
+	}
+	
 	gl_FragColor = col;
 }

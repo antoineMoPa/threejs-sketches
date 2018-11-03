@@ -13,7 +13,12 @@ void main() {
 	col.g += 0.2 - 0.2 * pow(1.2* p.y, 2.4);
 	col.b += 0.05 + 0.4 * pow(2.2* p.y, 2.2);
 
-	col *= 0.7;
+	col *= 0.8;
+	
+	if(p.y < 0.3){
+		float f = p.y/0.3;
+		col.rgb *= f;
+	}
 	
 	col.a = 1.0;
 	

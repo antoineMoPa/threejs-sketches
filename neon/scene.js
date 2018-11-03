@@ -44,6 +44,7 @@ var shaders_to_load = [
 ];
 
 var audio = document.querySelectorAll("audio")[0];
+audio.volume = 0.4;
 var loaded_shaders = 0;
 var shaders = {};
 
@@ -93,7 +94,7 @@ class AudioFFT {
 
 var afft = null;
 
-//afft = new AudioFFT(audio);
+afft = new AudioFFT(audio);
 
 for(var i = 0; i < shaders_to_load.length; i++){	
 	var curr = i;
@@ -364,7 +365,8 @@ function onWindowResize(){
 var post_processing_enabled = true;
 function updateComposer(){
 	var fps = stats.getFrameRate();
-	
+
+	post_processing_enabled = false;
 	if(post_processing_enabled && fps < 24){
 		composer.passes[0].renderToScreen = true;
 		composer.passes[1].enabled = false;
@@ -404,6 +406,8 @@ function render(){
 	}
 
 	shaderPass2.uniforms.time.value = t;
+
+	//t = t % 40;
 	
 	uniforms.time.value = t;
 

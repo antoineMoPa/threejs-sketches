@@ -53,7 +53,7 @@ var shaders = {};
  */
 class AudioFFT {
 	constructor(audioElement){
-		this._dim = 64;
+		this._dim = 32;
 		this.audioElement = audioElement;
 		this.audioCtx = new(window.AudioContext || window.webkitAudioContext)();
 		this.analyser = this.audioCtx.createAnalyser();
@@ -77,6 +77,27 @@ class AudioFFT {
 		this._canvas.style.width = "100%";
 		this._canvas.style.height = "200%";
 		this._canvas.style.zIndex="1000";
+		this._canvas.style.imageRendering = "-moz-crisp-edges";
+
+		this.logDebugInfo = this.logDebugInfo.bind(this);
+		this._canvas.addEventListener("click", this.logDebugInfo);
+	}
+
+	/*
+	   Log the uv value at clicked point
+	 */
+	logDebugInfo(event){
+		var x = event.clientX;
+		var y = event.clientY;
+		var w = window.innerWidth;
+		var h = window.innerHeight;
+
+		x /= w;
+		y /= h;
+
+		y = 1.0 - y;
+		
+		console.log("vec2(" + x + ", " + y + ")");
 	}
 
 	update() {
@@ -95,6 +116,10 @@ class AudioFFT {
 var afft = null;
 
 afft = new AudioFFT(audio);
+var canvas = afft.getCanvas();
+var afftCanvasTexture = new THREE.CanvasTexture(canvas);
+afftCanvasTexture.magFilter = THREE.NearestFilter;
+afftCanvasTexture.minFilter = THREE.NearestFilter;
 
 for(var i = 0; i < shaders_to_load.length; i++){	
 	var curr = i;
@@ -237,6 +262,10 @@ function init(){
 					tex: {
 						type: "t",
 						value: texture
+					},
+					afft: {
+						type: "t",
+						value: afftCanvasTexture
 					}
 				},
 				vertexShader: shaders['misc_vertex.glsl'],
@@ -328,7 +357,7 @@ function init(){
 	container.appendChild(renderer.domElement);
 	//
 	stats = new Stats();
-	container.appendChild(stats.dom);
+	//container.appendChild(stats.dom);
 	//
 	window.addEventListener('resize', onWindowResize, false);
 
@@ -366,7 +395,6 @@ var post_processing_enabled = true;
 function updateComposer(){
 	var fps = stats.getFrameRate();
 
-	post_processing_enabled = false;
 	if(post_processing_enabled && fps < 24){
 		composer.passes[0].renderToScreen = true;
 		composer.passes[1].enabled = false;
@@ -411,19 +439,18 @@ function render(){
 	
 	uniforms.time.value = t;
 
-	if(afft != null){
-		afft.update();
-		afft.getCanvas();
-	}
-	
 	if(skyroads){
 		skyroads.material.uniforms.time.value = t;
 	}
 
 	if(misc_material){
 		misc_material.uniforms.time.value = t;
+		if(afft != null){
+			afft.update();
+			afftCanvasTexture.needsUpdate = true;
+		}
 	}
-
+	
 	if(bus_material){
 		bus_material.uniforms.time.value = t;
 	}
